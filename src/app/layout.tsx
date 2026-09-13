@@ -1,7 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { AppShell } from "@/components/app-shell";
-import { PrototypeProvider } from "@/components/prototype-provider";
-import { localDate } from "@/lib/mock-data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,5 +12,5 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, view
 export const dynamic = "force-dynamic";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="vi"><body><PrototypeProvider today={localDate(new Date())}><AppShell>{children}</AppShell></PrototypeProvider></body></html>;
+  return <html lang="vi"><body>{children}</body></html>;
 }

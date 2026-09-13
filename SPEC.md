@@ -1,6 +1,6 @@
 # Nhà Mình — Product specification
 
-Status: revised specification only. No application implementation is authorized by this documentation update. The first future coding phase is a UI-only prototype.
+Status: Phase 1 approved; Phase 2 verified by the user. Phase 3 adds authentication and real profile identity while business cards remain explicitly labeled mock data. Real-account smoke tests are documented in AUTH_SETUP.md. Business rules below remain unchanged.
 
 ## Purpose and scope
 

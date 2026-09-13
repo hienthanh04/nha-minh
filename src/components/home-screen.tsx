@@ -7,8 +7,9 @@ import { currentUser, dateLabel, dinnerStatus, houseworkMember, households, memb
 import { usePrototype } from "./prototype-provider";
 import { Card, CardHeading, Completed } from "./ui";
 import { DutyCard } from "./duty-card";
+import type { FamilyProfile } from "@/lib/auth/profile";
 
-export function HomeScreen() {
+export function HomeScreen({ profile }: { profile: FamilyProfile }) {
   const state = usePrototype();
   const [changingDinner, setChangingDinner] = useState(false);
   const foodDialog = useRef<HTMLDialogElement>(null);
@@ -23,13 +24,14 @@ export function HomeScreen() {
     <header className="mb-6 flex items-center justify-between gap-4">
       <div>
         <p className="mb-1.5 text-sm capitalize text-muted">{dateLabel(state.today)}</p>
-        <h1 className="text-[1.8rem] font-bold leading-tight tracking-tight">Chào Thanh <span className="text-[1.5rem]" aria-hidden="true">☀️</span></h1>
+        <h1 className="text-[1.8rem] font-bold leading-tight tracking-tight">Chào {profile.display_name} <span className="text-[1.5rem]" aria-hidden="true">☀️</span></h1>
         <p className="mt-2 text-sm text-muted">Cùng chăm chút cho nhà mình.</p>
       </div>
-      <span className="avatar avatar-teal avatar-large" aria-label="Thành viên mẫu Thanh">T</span>
+      <span className="avatar avatar-teal avatar-large" aria-label={profile.display_name}>{profile.display_name.trim().slice(0, 1).toUpperCase()}</span>
     </header>
 
     <div className="space-y-4">
+      <p className="preview-note">Bạn đã đăng nhập. Các thẻ bên dưới vẫn là dữ liệu mẫu, thao tác chưa lưu vào gia đình.</p>
       <Card className="kitchen-card">
         <CardHeading icon={ChefHat} title="Việc của bạn hôm nay">
           <Link href="/lich" className="small-link" aria-label="Xem lịch công bếp"><ArrowRight size={20} /></Link>

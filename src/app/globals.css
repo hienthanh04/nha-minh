@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+.auth-shell { max-width: 480px; min-height: 100dvh; margin: 0 auto; padding: calc(48px + env(safe-area-inset-top)) 20px calc(32px + env(safe-area-inset-bottom)); }
+.auth-input { width: 100%; min-height: 48px; border: 1px solid #cfdfda; border-radius: 12px; padding: 12px; background: white; font: inherit; font-size: 16px; }
+
 @theme inline {
   --color-teal: #076b60;
   --color-muted: #626f72;

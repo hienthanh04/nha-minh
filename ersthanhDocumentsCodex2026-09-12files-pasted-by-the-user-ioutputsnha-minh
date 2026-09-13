@@ -1,0 +1,15 @@
+ .env.example                                       |   3 [32m+[m
+ DATABASE_SETUP.md                                  | 111 [32m++++++++[m
+ PHASE2_CHECKLIST.md                                |  80 [32m++++++[m
+ README.md                                          |  14 [32m+[m[31m-[m
+ package-lock.json                                  | 136 [32m++++++++++[m
+ package.json                                       |   6 [32m+[m[31m-[m
+ scripts/test-database.mjs                          |  37 [32m+++[m
+ src/lib/supabase/client.ts                         |   9 [32m+[m
+ src/lib/supabase/database.types.ts                 |  24 [32m++[m
+ src/lib/supabase/server.ts                         |  16 [32m++[m
+ .../migrations/20260912000100_initial_schema.sql   | 289 [32m+++++++++++++++++++++[m
+ .../20260913000100_fix_member_permissions.sql      | 134 [32m++++++++++[m
+ supabase/tests/permissions.sql                     | 153 [32m+++++++++++[m
+ supabase/verify.sql                                |  14 [32m+[m
+ 14 files changed, 1022 insertions(+), 4 deletions(-)

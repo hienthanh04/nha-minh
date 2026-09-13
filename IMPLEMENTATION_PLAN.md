@@ -1,6 +1,6 @@
 # Nhà Mình — Simplified implementation plan
 
-Status: documentation only. This revision supersedes the previous engineering sequence. Do not write application code as part of this update.
+Status: Phase 1 approved and Phase 2 verified by the user. Phase 3 authentication implemented; real-account checks remain in AUTH_SETUP.md. Stop before Phase 4. The phase order and business requirements below remain unchanged.
 
 The product rules in [SPEC.md](SPEC.md) are unchanged. Optimize for five known people and a beginner-maintainable codebase.
 
