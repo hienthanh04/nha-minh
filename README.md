@@ -1,6 +1,6 @@
 # Nhà Mình — Phase 1 UI prototype
 
-A Vietnamese, mobile-first Next.js App Router prototype for five fictional family members. **Mock data only:** no Supabase, authentication, database, API routes, persistent storage or external data requests. Phase 2 has not started.
+A Vietnamese, mobile-first Next.js App Router prototype for five fictional family members. The UI remains mock-data-only. Phase 2 now adds a local Supabase database foundation (migration, RLS policies, typed utilities and setup documentation); it is deliberately not connected to any page and does not implement authentication.
 
 ## Run locally
 
@@ -25,7 +25,7 @@ npm run build
 
 To view the production build locally, run `npm run start` after building.
 
-## What you can try
+## Phase 1 UI prototype
 
 - **Hôm nay:** cooking/dish completion, delegation in duty details, dinner choices/check-in, all five dinner statuses, housework check-in, and food finish/receive with confirmation.
 - **Lịch:** read-only sample weekly kitchen/dinner/housework views.
@@ -46,4 +46,12 @@ Dinner plans and check-ins are separate in-memory values. Once checked in, a rel
 - `package.json`, `package-lock.json`: scripts and exact resolved dependencies.
 - `SPEC.md`, `IMPLEMENTATION_PLAN.md`: agreed product rules and phased roadmap; unchanged by this implementation.
 
-No environment variables or credentials are needed. No PWA manifest/service worker is created in phase 1.
+No environment variables are needed to run the mock UI. The database client utilities only require variables when a later phase explicitly imports them. No PWA manifest/service worker, login or live-data integration is created yet.
+
+## Phase 2 database foundation
+
+Read [PHASE2_CHECKLIST.md](PHASE2_CHECKLIST.md) for the Vietnamese walkthrough and [DATABASE_SETUP.md](DATABASE_SETUP.md) for policy details. Run both SQL migrations in filename order; the second fixes member/admin permissions, date restrictions and allocation/history constraints. Then run `supabase/verify.sql` and, on an empty family database, the rollback-only `supabase/tests/permissions.sql`. No remote database has been changed by the assistant.
+
+Run `npm.cmd run test:db` to execute both migrations and permission checks in local, in-memory PostgreSQL. This never reads `.env.local` or contacts Supabase. Real login/JWT checks remain Phase 3 work. Local build/lint success alone does not verify remote RLS.
+
+The handwritten types in `src/lib/supabase/database.types.ts` are temporary and are not imported by the mock UI. Once a project exists, replace them with generated types using the Supabase CLI. The browser/server client helpers are also intentionally unused until authentication and feature integration phases.
