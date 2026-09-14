@@ -25,9 +25,8 @@ export default async function MorePage() {
       <Card>
         <CardHeading icon={Heart} title="Về bản xem thử" />
         <div className="space-y-3 text-sm leading-relaxed text-muted">
-          <p>Cả năm thành viên và mọi lịch trong bản này đều là dữ liệu minh họa.</p>
-          <p>Bạn có thể thử xác nhận công bếp, báo ăn, việc nhà và chuyển lượt gửi đồ. Khi đổi tab, các lựa chọn vẫn được giữ; tải lại trang sẽ đặt lại từ đầu.</p>
-          <p>Đăng nhập và hồ sơ cá nhân đã dùng Supabase. Các thao tác trên lịch mẫu chỉ thay đổi trong trình duyệt.</p>
+          <p>Đăng nhập, hồ sơ cá nhân và lịch bếp đã dùng dữ liệu thật trên Supabase. Công bếp đã lưu sẽ được giữ khi tải lại trang.</p>
+          <p>Bữa tối, việc nhà, đồ ăn và danh sách minh họa bên trên vẫn là dữ liệu mẫu. Những thao tác mẫu sẽ đặt lại khi tải lại trang.</p>
         </div>
       </Card>
     </div>

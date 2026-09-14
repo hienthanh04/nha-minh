@@ -1,6 +1,6 @@
 # Nhà Mình — Product specification
 
-Status: Phase 1 approved; Phase 2 verified by the user. Phase 3 adds authentication and real profile identity while business cards remain explicitly labeled mock data. Real-account smoke tests are documented in AUTH_SETUP.md. Business rules below remain unchanged.
+Status: Phases 1–3 accepted by the user. Phase 4 connects kitchen schedules, completion, delegation and history; Dinner, Housework and Food remain mock data. Apply the new migration and complete the real-account checks in KITCHEN_SETUP.md. Business rules below remain unchanged.
 
 ## Purpose and scope
 

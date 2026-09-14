@@ -1,19 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { ChefHat, Utensils, Users, BrushCleaning, CookingPot, ArrowRight, Check, X } from "lucide-react";
+import type { ReactNode } from "react";
+import { Utensils, Users, BrushCleaning, CookingPot, ArrowRight, Check, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { currentUser, dateLabel, dinnerStatus, houseworkMember, households, memberName, members } from "@/lib/mock-data";
 import { usePrototype } from "./prototype-provider";
 import { Card, CardHeading, Completed } from "./ui";
-import { DutyCard } from "./duty-card";
+
 import type { FamilyProfile } from "@/lib/auth/profile";
 
-export function HomeScreen({ profile }: { profile: FamilyProfile }) {
+export function HomeScreen({ profile, kitchen }: { profile: FamilyProfile; kitchen: ReactNode }) {
   const state = usePrototype();
   const [changingDinner, setChangingDinner] = useState(false);
   const foodDialog = useRef<HTMLDialogElement>(null);
-  const ownDuties = state.duties.filter((duty) => duty.date === state.kitchenDate && (duty.delegatedTo ?? duty.assignedTo) === currentUser.id);
   const myPlan = state.dinnerPlans[currentUser.id];
   const myCheckin = state.dinnerCheckins[currentUser.id];
   const food = state.foodBatches.at(-1)!;
@@ -31,15 +30,8 @@ export function HomeScreen({ profile }: { profile: FamilyProfile }) {
     </header>
 
     <div className="space-y-4">
-      <p className="preview-note">Bạn đã đăng nhập. Các thẻ bên dưới vẫn là dữ liệu mẫu, thao tác chưa lưu vào gia đình.</p>
-      <Card className="kitchen-card">
-        <CardHeading icon={ChefHat} title="Việc của bạn hôm nay">
-          <Link href="/lich" className="small-link" aria-label="Xem lịch công bếp"><ArrowRight size={20} /></Link>
-        </CardHeading>
-        {state.kitchenDate !== state.today && <p className="preview-note mb-4">Cuối tuần không có công bếp. Thử giao diện ngày {dateLabel(state.kitchenDate, true)} bên dưới.</p>}
-        {ownDuties.length ? ownDuties.map((duty) => <DutyCard key={duty.id} duty={duty} />)
-          : <p className="py-3 text-sm leading-relaxed text-muted">Hôm nay bạn không có công nấu/rửa.</p>}
-      </Card>
+      <p className="preview-note">Lịch bếp dùng dữ liệu thật. Bữa tối, việc nhà và đồ ăn vẫn là dữ liệu mẫu.</p>
+      {kitchen}
 
       <Card>
         <CardHeading icon={Utensils} title="Bữa tối của bạn" />

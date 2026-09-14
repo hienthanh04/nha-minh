@@ -129,6 +129,8 @@ select pg_temp.expect_error($q$update public.profiles set role='member' where id
   'P0001','Cannot demote last admin');
 
 -- Create a complete week in one transaction; test count validation before rollback.
+-- Owner creates these fixtures to test constraints; Phase 4 tests the admin RPC.
+reset role;
 insert into public.kitchen_duties(date,duty_type,slot_number,assigned_to)
 select date '2030-01-07'+d, case when s=2 then 'dishes' else 'cook' end::public.kitchen_duty_type,
   case when s=2 then 1 else s+1 end,
@@ -142,6 +144,7 @@ select pg_temp.expect_error($q$update public.kitchen_duties set assigned_to='f20
   where date='2030-01-07' and duty_type='cook' and slot_number=1$q$,'P0001','Uneven original allocation rejected');
 select pg_temp.expect_error($q$insert into public.kitchen_templates(effective_from) values ('2030-01-07')$q$,
   'P0001','Empty kitchen template rejected');
+set local role authenticated;
 insert into public.food_households(id,name,rotation_position) values ('f3000000-0000-0000-0000-000000000001','TEST HOUSE',0);
 insert into public.food_batches(household_id,status) values ('f3000000-0000-0000-0000-000000000001','waiting');
 select pg_temp.expect_error($q$insert into public.food_batches(household_id,status,start_date)

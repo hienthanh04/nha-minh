@@ -29,6 +29,11 @@ try {
   if (checks.length < 20) throw new Error("Permission test results are incomplete");
   for (const check of checks) console.log(`PASS: ${check.test}`);
   console.log(`${checks.length} database checks passed; all fixtures rolled back.`);
+  const kitchenResults = await db.exec(await readFile(new URL("../supabase/tests/kitchen.sql", import.meta.url), "utf8"));
+  const kitchenChecks = kitchenResults.flatMap(result => result.rows).filter(row => row.result === "PASS");
+  if (kitchenChecks.length < 30) throw new Error("Kitchen test results are incomplete");
+  for (const check of kitchenChecks) console.log(`PASS: ${check.test}`);
+  console.log(`${kitchenChecks.length} kitchen checks passed; fixtures rolled back.`);
 } catch (error) {
   console.error(error.message, error.code ?? "", error.where ?? "");
   process.exitCode = 1;

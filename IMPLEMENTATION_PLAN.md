@@ -1,6 +1,6 @@
 # Nhà Mình — Simplified implementation plan
 
-Status: Phase 1 approved and Phase 2 verified by the user. Phase 3 authentication implemented; real-account checks remain in AUTH_SETUP.md. Stop before Phase 4. The phase order and business requirements below remain unchanged.
+Status: Phases 1–3 accepted by the user. Phase 4 implemented locally; migration and real-account smoke-test instructions are in KITCHEN_SETUP.md. Stop before Phase 5. The phase order and business requirements below remain unchanged.
 
 The product rules in [SPEC.md](SPEC.md) are unchanged. Optimize for five known people and a beginner-maintainable codebase.
 
@@ -47,7 +47,7 @@ Prefer route pages, reusable UI components, plain TypeScript business helpers an
 
 - Connect weekly templates/schedules and admin week editing. Validate all 15 slots and exactly three original assignments per member in one save.
 - Materialize complete weeks from the effective template when needed, using a simple idempotent transaction. Preserve existing week-specific edits on ordinary repeat requests.
-- Template revision UI previews affected future weeks; applying an update must explicitly preserve or replace date-specific edits and reject any overwrite of delegation/completion. Historical changes use correction, not template propagation.
+- Phase 4 uses the preservation option: template edits explicitly keep all already-created weeks, including date-specific edits. Only missing future weeks use the effective template. Admins edit an existing week separately; any completion/delegation blocks whole-week replacement. Historical changes use explicit correction, not template propagation.
 - Connect today's personal assignments and one-tap completion.
 - Add original-assignee delegation controls, keeping `assigned_to`, `delegated_to` and `completed_by` distinct.
 - Add actual-work summary, member drill-down and late confirmation. Trace totals directly through dated duty records.

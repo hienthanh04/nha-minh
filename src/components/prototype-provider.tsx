@@ -1,12 +1,10 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { createMockData, currentUser, households, type DinnerPlan, type MemberId, type MockDuty, type MockFoodBatch } from "@/lib/mock-data";
+import { createMockData, currentUser, households, type DinnerPlan, type MockFoodBatch } from "@/lib/mock-data";
 
 type PrototypeState = ReturnType<typeof createMockData> & {
   houseworkAt: string | null;
-  completeDuty: (id: string) => void;
-  delegateDuty: (id: string, member: MemberId | null) => void;
   setDinnerPlan: (plan: DinnerPlan) => void;
   checkInDinner: () => void;
   checkInHousework: () => void;
@@ -18,28 +16,10 @@ const PrototypeContext = createContext<PrototypeState | null>(null);
 
 export function PrototypeProvider({ today, children }: { today: string; children: ReactNode }) {
   const [initial] = useState(() => createMockData(today));
-  const [duties, setDuties] = useState<MockDuty[]>(initial.duties);
   const [dinnerPlans, setDinnerPlans] = useState(initial.dinnerPlans);
   const [dinnerCheckins, setDinnerCheckins] = useState(initial.dinnerCheckins);
   const [houseworkAt, setHouseworkAt] = useState<string | null>(null);
   const [foodBatches, setFoodBatches] = useState<MockFoodBatch[]>(initial.foodBatches);
-
-  function completeDuty(id: string) {
-    const timestamp = new Date().toISOString();
-    setDuties((items) => items.map((duty) =>
-      duty.id === id && !duty.completedAt && duty.date <= initial.kitchenDate &&
-      (duty.delegatedTo ?? duty.assignedTo) === currentUser.id
-        ? { ...duty, completedAt: timestamp, completedBy: currentUser.id } : duty,
-    ));
-  }
-
-  function delegateDuty(id: string, member: MemberId | null) {
-    if (member === currentUser.id) return;
-    setDuties((items) => items.map((duty) =>
-      duty.id === id && duty.assignedTo === currentUser.id && !duty.completedAt
-        ? { ...duty, delegatedTo: member } : duty,
-    ));
-  }
 
   function setDinnerPlan(plan: DinnerPlan) {
     if (dinnerCheckins[currentUser.id]) return;
@@ -71,8 +51,8 @@ export function PrototypeProvider({ today, children }: { today: string; children
   }
 
   return <PrototypeContext.Provider value={{
-    ...initial, duties, dinnerPlans, dinnerCheckins, houseworkAt, foodBatches,
-    completeDuty, delegateDuty, setDinnerPlan, checkInDinner, finishFood, receiveFood,
+    ...initial, dinnerPlans, dinnerCheckins, houseworkAt, foodBatches,
+    setDinnerPlan, checkInDinner, finishFood, receiveFood,
     checkInHousework: () => setHouseworkAt((previous) => previous ?? new Date().toISOString()),
   }}>{children}</PrototypeContext.Provider>;
 }
