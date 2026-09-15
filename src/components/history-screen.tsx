@@ -6,13 +6,14 @@ import { usePrototype } from "@/components/prototype-provider";
 import { Card, CardHeading, PageHeading } from "@/components/ui";
 import { dateLabel, households, timeLabel } from "@/lib/mock-data";
 
-export default function HistoryPage({ kitchen }: { kitchen: ReactNode }) {
+export default function HistoryPage({ kitchen, dinner }: { kitchen: ReactNode; dinner: ReactNode }) {
   const { days, today, houseworkAt, foodBatches } = usePrototype();
   const finishedBatches = foodBatches.filter((batch) => batch.status === "finished");
   return <>
-    <PageHeading eyebrow="Nhìn lại một chút" title="Lịch sử của cả nhà" description="Lịch bếp thật · Các mục còn lại là dữ liệu mẫu của tuần hiện tại" />
+    <PageHeading eyebrow="Nhìn lại một chút" title="Lịch sử của cả nhà" description="Bếp và bữa tối đã kết nối · Việc nhà và đồ ăn vẫn là mẫu" />
     <div className="space-y-4">
       {kitchen}
+      {dinner}
       <Card>
         <CardHeading icon={BrushCleaning} title="Việc nhà · Thanh" />
         <ul>{days.map((date) => <li key={date} className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-3 text-sm last:border-0">

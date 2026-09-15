@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "test:db": "node scripts/test-database.mjs",
     "test:auth": "node --test --test-isolation=none scripts/test-auth.mjs",
-    "test:kitchen": "node --test --test-isolation=none scripts/test-kitchen.mjs"
+    "test:kitchen": "node --test --test-isolation=none scripts/test-kitchen.mjs",
+    "test:dinner": "node --test --test-isolation=none scripts/test-dinner.mjs"
   },
   "engines": {
     "node": "24.x"

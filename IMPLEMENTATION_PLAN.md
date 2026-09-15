@@ -1,6 +1,6 @@
 # Nhà Mình — Simplified implementation plan
 
-Status: Phases 1–3 accepted by the user. Phase 4 implemented locally; migration and real-account smoke-test instructions are in KITCHEN_SETUP.md. Stop before Phase 5. The phase order and business requirements below remain unchanged.
+Status: Phases 1–4 accepted by the user. Phase 5 implemented locally using existing dinner constraints and RLS; no new migration. Real-account smoke-test instructions are in DINNER_SETUP.md. Housework/Food remain mock. Stop before Phase 6. The phase order and business requirements below remain unchanged.
 
 The product rules in [SPEC.md](SPEC.md) are unchanged. Optimize for five known people and a beginner-maintainable codebase.
 

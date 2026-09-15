@@ -14,6 +14,7 @@ export default async function MorePage() {
         <h2 className="text-lg font-bold">{profile.display_name}</h2>
         <p className="mb-4 mt-2 text-muted">Thành viên số {profile.member_slot} · {profile.role === "admin" ? "Quản trị viên" : "Thành viên"}</p>
         {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri">Quản trị gia đình</Link>}
+        {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri/bua-toi">Sửa bữa tối</Link>}
         <LogoutForm />
       </Card>
       <Card>
@@ -25,8 +26,8 @@ export default async function MorePage() {
       <Card>
         <CardHeading icon={Heart} title="Về bản xem thử" />
         <div className="space-y-3 text-sm leading-relaxed text-muted">
-          <p>Đăng nhập, hồ sơ cá nhân và lịch bếp đã dùng dữ liệu thật trên Supabase. Công bếp đã lưu sẽ được giữ khi tải lại trang.</p>
-          <p>Bữa tối, việc nhà, đồ ăn và danh sách minh họa bên trên vẫn là dữ liệu mẫu. Những thao tác mẫu sẽ đặt lại khi tải lại trang.</p>
+          <p>Đăng nhập, hồ sơ cá nhân, lịch bếp và bữa tối đã dùng dữ liệu thật trên Supabase, được giữ khi tải lại trang.</p>
+          <p>Việc nhà, đồ ăn và danh sách minh họa bên trên vẫn là dữ liệu mẫu. Những thao tác mẫu sẽ đặt lại khi tải lại trang.</p>
         </div>
       </Card>
     </div>

@@ -34,6 +34,11 @@ try {
   if (kitchenChecks.length < 30) throw new Error("Kitchen test results are incomplete");
   for (const check of kitchenChecks) console.log(`PASS: ${check.test}`);
   console.log(`${kitchenChecks.length} kitchen checks passed; fixtures rolled back.`);
+  const dinnerResults = await db.exec(await readFile(new URL("../supabase/tests/dinner.sql", import.meta.url), "utf8"));
+  const dinnerChecks = dinnerResults.flatMap(result => result.rows).filter(row => row.result === "PASS");
+  if (dinnerChecks.length < 25) throw new Error("Dinner test results are incomplete");
+  for (const check of dinnerChecks) console.log(`PASS: ${check.test}`);
+  console.log(`${dinnerChecks.length} dinner checks passed; fixtures rolled back.`);
 } catch (error) {
   console.error(error.message, error.code ?? "", error.where ?? "");
   process.exitCode = 1;

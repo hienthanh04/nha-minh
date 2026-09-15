@@ -1,6 +1,6 @@
 # Nhà Mình — Product specification
 
-Status: Phases 1–3 accepted by the user. Phase 4 connects kitchen schedules, completion, delegation and history; Dinner, Housework and Food remain mock data. Apply the new migration and complete the real-account checks in KITCHEN_SETUP.md. Business rules below remain unchanged.
+Status: Phases 1–4 accepted by the user. Phase 5 connects real dinner planning, check-ins, family status and admin corrections. Housework and Food remain mock data. No new migration is needed for Phase 5. Follow DINNER_SETUP.md for real-account checks; stop before Phase 6. Business rules below remain unchanged.
 
 ## Purpose and scope
 

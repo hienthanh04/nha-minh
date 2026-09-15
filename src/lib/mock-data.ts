@@ -11,7 +11,6 @@ export type MemberId = (typeof members)[number]["id"];
 export const currentUser = members[0];
 export const houseworkMember: MemberId = "thanh";
 export const households = ["Nhà Ngoại", "Nhà Nội", "Nhà Dì"];
-export type DinnerPlan = "unknown" | "eating" | "not_eating";
 
 export type MockFoodBatch = {
   id: number;
@@ -54,21 +53,9 @@ export function createMockData(today: string) {
   const weekday = new Date(`${today}T12:00:00+07:00`).getUTCDay();
   const monday = addDays(today, -(weekday === 0 ? 6 : weekday - 1));
   const days = Array.from({ length: 7 }, (_, i) => addDays(monday, i));
-  const dinnerPlans: Record<MemberId, DinnerPlan> = {
-    thanh: "eating", ba: "eating", me: "eating", linh: "not_eating", nam: "unknown",
-  };
-  // Eating check-ins stay separate from dinner plans, even in the prototype.
-  const dinnerCheckins: Partial<Record<MemberId, string>> = { ba: `${today}T18:45:00+07:00` };
   const foodBatches: MockFoodBatch[] = [{
     id: 0, householdIndex: 0, status: "active",
     startedAt: `${addDays(today, -2)}T12:00:00+07:00`, finishedAt: null,
   }];
-  return { today, monday, days, dinnerPlans, dinnerCheckins, foodBatches };
-}
-
-export function dinnerStatus(plan: DinnerPlan, checkin?: string) {
-  if (checkin) return { label: "Đã ăn", icon: "✓", tone: "success" };
-  if (plan === "eating") return { label: "Có ăn · Chưa ăn", icon: "🍚", tone: "warm" };
-  if (plan === "not_eating") return { label: "Không ăn", icon: "−", tone: "muted" };
-  return { label: "Chưa báo", icon: "?", tone: "muted" };
+  return { today, monday, days, foodBatches };
 }

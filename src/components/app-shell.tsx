@@ -20,10 +20,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Link href="/" className="flex min-h-11 items-center gap-2.5 font-bold tracking-tight" aria-label="Nhà Mình — Hôm nay">
         <span className="brand-mark"><House size={18} strokeWidth={2.3} aria-hidden="true" /></span>Nhà Mình<span className="text-orange"><Heart size={13} fill="currentColor" aria-hidden="true" /></span>
       </Link>
-      <span className="prototype-badge">Bếp đã kết nối</span>
+      <span className="prototype-badge">Bếp & bữa tối</span>
     </div>
     <main id="main-content" className="px-5 pb-8 pt-5 sm:px-7" tabIndex={-1}>{children}</main>
-    <p className="px-5 pb-7 text-center text-xs text-muted">Công bếp được lưu · Bữa tối, việc nhà và đồ ăn vẫn là mẫu</p>
+    <p className="px-5 pb-7 text-center text-xs text-muted">Bếp và bữa tối được lưu · Việc nhà và đồ ăn vẫn là mẫu</p>
     <nav aria-label="Điều hướng chính" className="bottom-nav">
       {navigation.map(({ href, label, icon: Icon }) => <Link key={href} href={href}
         aria-current={pathname === href ? "page" : undefined}

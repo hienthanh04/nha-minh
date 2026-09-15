@@ -1,23 +1,19 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Utensils, Users, BrushCleaning, CookingPot, ArrowRight, Check, X } from "lucide-react";
-import { useRef, useState } from "react";
-import { currentUser, dateLabel, dinnerStatus, houseworkMember, households, memberName, members } from "@/lib/mock-data";
+import { BrushCleaning, CookingPot, ArrowRight, Check, X } from "lucide-react";
+import { useRef } from "react";
+import { currentUser, dateLabel, houseworkMember, households, memberName } from "@/lib/mock-data";
 import { usePrototype } from "./prototype-provider";
 import { Card, CardHeading, Completed } from "./ui";
 
 import type { FamilyProfile } from "@/lib/auth/profile";
 
-export function HomeScreen({ profile, kitchen }: { profile: FamilyProfile; kitchen: ReactNode }) {
+export function HomeScreen({ profile, kitchen, dinner }: { profile: FamilyProfile; kitchen: ReactNode; dinner: ReactNode }) {
   const state = usePrototype();
-  const [changingDinner, setChangingDinner] = useState(false);
   const foodDialog = useRef<HTMLDialogElement>(null);
-  const myPlan = state.dinnerPlans[currentUser.id];
-  const myCheckin = state.dinnerCheckins[currentUser.id];
   const food = state.foodBatches.at(-1)!;
   const nextHousehold = households[(food.householdIndex + 1) % households.length];
-  const waitingForDinner = members.filter((member) => state.dinnerPlans[member.id] === "eating" && !state.dinnerCheckins[member.id]).length;
 
   return <>
     <header className="mb-6 flex items-center justify-between gap-4">
@@ -30,44 +26,10 @@ export function HomeScreen({ profile, kitchen }: { profile: FamilyProfile; kitch
     </header>
 
     <div className="space-y-4">
-      <p className="preview-note">Lịch bếp dùng dữ liệu thật. Bữa tối, việc nhà và đồ ăn vẫn là dữ liệu mẫu.</p>
+      <p className="preview-note">Bếp và bữa tối dùng dữ liệu thật. Việc nhà và đồ ăn vẫn là dữ liệu mẫu.</p>
       {kitchen}
 
-      <Card>
-        <CardHeading icon={Utensils} title="Bữa tối của bạn" />
-        <div aria-live="polite">
-          {myCheckin ? <Completed at={myCheckin} label="Đã ăn" /> : <>
-            {myPlan === "unknown" || changingDinner ? <>
-              <p className="mb-4">Tối nay bạn có ăn không?</p>
-              <div className="grid grid-cols-2 gap-3">
-                <button className="button button-primary" onClick={() => { state.setDinnerPlan("eating"); setChangingDinner(false); }}>Ăn</button>
-                <button className="button button-secondary" onClick={() => { state.setDinnerPlan("not_eating"); setChangingDinner(false); }}>Không ăn</button>
-              </div>
-            </> : <>
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-x-2">
-                <p className="text-sm">Bạn đã báo: <strong>{myPlan === "eating" ? "Có ăn" : "Không ăn"}</strong></p>
-                <button className="text-button" onClick={() => setChangingDinner(true)}>Đổi lựa chọn</button>
-              </div>
-              {myPlan === "eating" && <button className="button button-primary w-full" onClick={state.checkInDinner}><Utensils size={18} aria-hidden="true" />Tôi đã ăn</button>}
-            </>}
-          </>}
-        </div>
-      </Card>
-
-      <Card>
-        <CardHeading icon={Users} title="Cả nhà ăn tối" />
-        <ul className="family-list" aria-label="Trạng thái bữa tối của 5 thành viên">
-          {members.map((member) => {
-            const status = dinnerStatus(state.dinnerPlans[member.id], state.dinnerCheckins[member.id]);
-            return <li key={member.id} className="family-row">
-              <span className={`avatar avatar-${member.color}`} aria-hidden="true">{member.initial}</span>
-              <span className="flex-1 font-semibold">{member.name}{member.id === currentUser.id && <span className="ml-1.5 text-xs font-normal text-muted">Bạn</span>}</span>
-              <span className={`status status-${status.tone}`}><span aria-hidden="true">{status.icon}</span>{status.label}</span>
-            </li>;
-          })}
-        </ul>
-        <p className="save-food-note" aria-live="polite"><CookingPot size={17} aria-hidden="true" />{waitingForDinner > 0 ? `Nhớ để phần cho ${waitingForDinner} người chưa ăn nhé.` : "Đã đủ phần cho những người báo ăn."}</p>
-      </Card>
+      {dinner}
 
       <Card>
         <CardHeading icon={BrushCleaning} title="Việc nhà tuần này" />
