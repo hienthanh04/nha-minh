@@ -19,6 +19,9 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      housework_ensure_week: { Args: { p_week: string }; Returns: undefined };
+      housework_save_rotation: { Args: { p_week: string; p_members: string[] }; Returns: undefined };
+      housework_assign_week: { Args: { p_week: string; p_member: string; p_expected?: string | null }; Returns: undefined };
       is_family_member: { Args: Record<string, never>; Returns: boolean };
       is_family_admin: { Args: Record<string, never>; Returns: boolean };
       kitchen_ensure_week: { Args: { p_week: string }; Returns: undefined };

@@ -24,6 +24,10 @@ try {
   // Supabase grants anon SELECT by default. Reproduce that so RLS, not a missing
   // grant, must deny anonymous reads in these tests.
   await db.exec("grant select on all tables in schema public to anon;");
+  const verification = await db.exec(await readFile(new URL("../supabase/verify-housework.sql", import.meta.url), "utf8"));
+  const verificationRows = verification.flatMap(result => result.rows);
+  if (verificationRows.length !== 9 || verificationRows.some(row => row.passed !== true)) throw new Error("Housework read-only verification failed");
+  console.log("PASS: 9 read-only housework migration checks");
   const results = await db.exec(await readFile(new URL("../supabase/tests/permissions.sql", import.meta.url), "utf8"));
   const checks = results.flatMap((result) => result.rows).filter((row) => row.result === "PASS");
   if (checks.length < 20) throw new Error("Permission test results are incomplete");
@@ -39,6 +43,11 @@ try {
   if (dinnerChecks.length < 25) throw new Error("Dinner test results are incomplete");
   for (const check of dinnerChecks) console.log(`PASS: ${check.test}`);
   console.log(`${dinnerChecks.length} dinner checks passed; fixtures rolled back.`);
+  const houseworkResults = await db.exec(await readFile(new URL("../supabase/tests/housework.sql", import.meta.url), "utf8"));
+  const houseworkChecks = houseworkResults.flatMap(result => result.rows).filter(row => row.result === "PASS");
+  if (houseworkChecks.length < 35) throw new Error("Housework test results are incomplete");
+  for (const check of houseworkChecks) console.log(`PASS: ${check.test}`);
+  console.log(`${houseworkChecks.length} housework checks passed; fixtures rolled back.`);
 } catch (error) {
   console.error(error.message, error.code ?? "", error.where ?? "");
   process.exitCode = 1;

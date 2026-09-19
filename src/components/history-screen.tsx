@@ -1,26 +1,20 @@
 "use client";
 import type { ReactNode } from "react";
 
-import { BrushCleaning, CookingPot } from "lucide-react";
+import { CookingPot } from "lucide-react";
 import { usePrototype } from "@/components/prototype-provider";
 import { Card, CardHeading, PageHeading } from "@/components/ui";
-import { dateLabel, households, timeLabel } from "@/lib/mock-data";
+import { households, timeLabel } from "@/lib/mock-data";
 
-export default function HistoryPage({ kitchen, dinner }: { kitchen: ReactNode; dinner: ReactNode }) {
-  const { days, today, houseworkAt, foodBatches } = usePrototype();
+export default function HistoryPage({ kitchen, dinner, housework }: { kitchen: ReactNode; dinner: ReactNode; housework: ReactNode }) {
+  const { foodBatches } = usePrototype();
   const finishedBatches = foodBatches.filter((batch) => batch.status === "finished");
   return <>
-    <PageHeading eyebrow="Nhìn lại một chút" title="Lịch sử của cả nhà" description="Bếp và bữa tối đã kết nối · Việc nhà và đồ ăn vẫn là mẫu" />
+    <PageHeading eyebrow="Nhìn lại một chút" title="Lịch sử của cả nhà" description="Bếp, bữa tối và việc nhà đã kết nối · Đồ ăn vẫn là mẫu" />
     <div className="space-y-4">
       {kitchen}
       {dinner}
-      <Card>
-        <CardHeading icon={BrushCleaning} title="Việc nhà · Thanh" />
-        <ul>{days.map((date) => <li key={date} className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-3 text-sm last:border-0">
-          <span>{dateLabel(date, true)}{date === today ? " · Hôm nay" : ""}</span>
-          <span className={date === today && houseworkAt ? "text-teal" : "text-muted"}>{date === today && houseworkAt ? `✓ Đã làm lúc ${timeLabel(houseworkAt)}` : date > today ? "Chưa tới ngày" : "Chưa xác nhận"}</span>
-        </li>)}</ul>
-      </Card>
+      {housework}
       <Card>
         <CardHeading icon={CookingPot} title="Những đợt đồ ăn" />
         {finishedBatches.length === 0 ? <p className="text-sm leading-relaxed text-muted">Chưa có đợt nào kết thúc. Thử “Đồ ăn đã hết” ở Hôm nay để xem lịch sử mẫu.</p>

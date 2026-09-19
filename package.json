@@ -13,7 +13,8 @@
     "test:db": "node scripts/test-database.mjs",
     "test:auth": "node --test --test-isolation=none scripts/test-auth.mjs",
     "test:kitchen": "node --test --test-isolation=none scripts/test-kitchen.mjs",
-    "test:dinner": "node --test --test-isolation=none scripts/test-dinner.mjs"
+    "test:dinner": "node --test --test-isolation=none scripts/test-dinner.mjs",
+    "test:housework": "node --test --test-isolation=none scripts/test-housework.mjs"
   },
   "engines": {
     "node": "24.x"

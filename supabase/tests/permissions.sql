@@ -121,10 +121,13 @@ select pg_temp.expect_error($q$insert into public.dinner_checkins(member_id,date
 with changed as (update public.housework_checkins set completed_at=now()-interval '1 hour'
   where member_id='f2000000-0000-0000-0000-000000000002' returning id)
 select pg_temp.check_true((select count(*)=1 from changed),'Admin can correct another member housework');
+-- Phase 6 restricts raw assignment writes. Owner still checks the underlying FK.
+reset role;
 select pg_temp.expect_error($q$update public.housework_weeks
   set responsible_member_id='f2000000-0000-0000-0000-000000000003'$q$,
   '23001','Existing housework history protects its weekly assignment');
 select pg_temp.expect_error($q$delete from public.housework_weeks$q$,'23001','Cannot delete referenced housework week');
+set local role authenticated;
 select pg_temp.expect_error($q$update public.profiles set role='member' where id=auth.uid()$q$,
   'P0001','Cannot demote last admin');
 

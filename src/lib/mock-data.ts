@@ -9,7 +9,6 @@ export const members = [
 
 export type MemberId = (typeof members)[number]["id"];
 export const currentUser = members[0];
-export const houseworkMember: MemberId = "thanh";
 export const households = ["Nhà Ngoại", "Nhà Nội", "Nhà Dì"];
 
 export type MockFoodBatch = {

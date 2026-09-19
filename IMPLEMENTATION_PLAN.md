@@ -1,6 +1,6 @@
 # Nhà Mình — Simplified implementation plan
 
-Status: Phases 1–4 accepted by the user. Phase 5 implemented locally using existing dinner constraints and RLS; no new migration. Real-account smoke-test instructions are in DINNER_SETUP.md. Housework/Food remain mock. Stop before Phase 6. The phase order and business requirements below remain unchanged.
+Status: Phases 1–5 accepted by the user. Phase 6 implemented locally with a new housework operations migration. Follow HOUSEWORK_SETUP.md for migration/setup and real-account checks. Food remains mock. Stop before Phase 7. Business requirements and phase order remain unchanged.
 
 The product rules in [SPEC.md](SPEC.md) are unchanged. Optimize for five known people and a beginner-maintainable codebase.
 
@@ -70,6 +70,7 @@ Prefer route pages, reusable UI components, plain TypeScript business helpers an
 
 - Connect the five-member weekly rotation, configured start week and admin future-week edits.
 - Keep the dated weekly assignment as the source of truth for daily check-ins and history.
+- Phase 6 preserves all already-created weeks, including admin exceptions. New rotation versions affect only missing future weeks; the admin can edit an existing future week separately. Current-week initialization is allowed only if missing, and initial rotation setup may start this Monday. Later rotation edits start in a future week.
 - Show the daily button only to the responsible member; enforce the same rule in the database.
 - Add weekly history and admin corrections while preserving historical assignment consistency.
 - Likely areas: housework components/actions/queries, rotation editor and rotation tests.

@@ -4,8 +4,6 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import { createMockData, households, type MockFoodBatch } from "@/lib/mock-data";
 
 type PrototypeState = ReturnType<typeof createMockData> & {
-  houseworkAt: string | null;
-  checkInHousework: () => void;
   finishFood: () => void;
   receiveFood: () => void;
 };
@@ -14,7 +12,6 @@ const PrototypeContext = createContext<PrototypeState | null>(null);
 
 export function PrototypeProvider({ today, children }: { today: string; children: ReactNode }) {
   const [initial] = useState(() => createMockData(today));
-  const [houseworkAt, setHouseworkAt] = useState<string | null>(null);
   const [foodBatches, setFoodBatches] = useState<MockFoodBatch[]>(initial.foodBatches);
 
   function finishFood() {
@@ -36,9 +33,8 @@ export function PrototypeProvider({ today, children }: { today: string; children
   }
 
   return <PrototypeContext.Provider value={{
-    ...initial, houseworkAt, foodBatches,
+    ...initial, foodBatches,
     finishFood, receiveFood,
-    checkInHousework: () => setHouseworkAt((previous) => previous ?? new Date().toISOString()),
   }}>{children}</PrototypeContext.Provider>;
 }
 

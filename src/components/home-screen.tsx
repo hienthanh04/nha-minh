@@ -1,15 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { BrushCleaning, CookingPot, ArrowRight, Check, X } from "lucide-react";
+import { CookingPot, ArrowRight, Check, X } from "lucide-react";
 import { useRef } from "react";
-import { currentUser, dateLabel, houseworkMember, households, memberName } from "@/lib/mock-data";
+import { dateLabel, households } from "@/lib/mock-data";
 import { usePrototype } from "./prototype-provider";
-import { Card, CardHeading, Completed } from "./ui";
+import { Card, CardHeading } from "./ui";
 
 import type { FamilyProfile } from "@/lib/auth/profile";
 
-export function HomeScreen({ profile, kitchen, dinner }: { profile: FamilyProfile; kitchen: ReactNode; dinner: ReactNode }) {
+export function HomeScreen({ profile, kitchen, dinner, housework }: { profile: FamilyProfile; kitchen: ReactNode; dinner: ReactNode; housework: ReactNode }) {
   const state = usePrototype();
   const foodDialog = useRef<HTMLDialogElement>(null);
   const food = state.foodBatches.at(-1)!;
@@ -26,22 +26,12 @@ export function HomeScreen({ profile, kitchen, dinner }: { profile: FamilyProfil
     </header>
 
     <div className="space-y-4">
-      <p className="preview-note">Bếp và bữa tối dùng dữ liệu thật. Việc nhà và đồ ăn vẫn là dữ liệu mẫu.</p>
+      <p className="preview-note">Bếp, bữa tối và việc nhà dùng dữ liệu thật. Đồ ăn nhà gửi vẫn là dữ liệu mẫu.</p>
       {kitchen}
 
       {dinner}
 
-      <Card>
-        <CardHeading icon={BrushCleaning} title="Việc nhà tuần này" />
-        <div className="mb-4 flex items-center gap-3">
-          <span className="task-emoji" aria-hidden="true">🧹</span>
-          <div><p className="font-semibold">{houseworkMember === currentUser.id ? "Tuần này tới lượt bạn" : memberName(houseworkMember)}</p>
-            <p className="mt-1 text-sm text-muted">{dateLabel(state.days[0], true)} – {dateLabel(state.days[6], true)}</p></div>
-        </div>
-        {state.houseworkAt ? <Completed at={state.houseworkAt} /> : houseworkMember === currentUser.id
-          ? <button className="button button-secondary w-full" onClick={state.checkInHousework}><Check size={18} aria-hidden="true" />Đã làm hôm nay</button>
-          : <p className="text-sm text-muted">Hôm nay chưa xác nhận.</p>}
-      </Card>
+      {housework}
 
       <Card>
         <CardHeading icon={CookingPot} title="Đồ ăn nhà gửi" />
