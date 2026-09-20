@@ -1,4 +1,6 @@
+import { DataError } from "@/components/data-status";
 import Link from "next/link";
+import Form from "next/form";
 import { ChefHat } from "lucide-react";
 import { Card, CardHeading } from "@/components/ui";
 import { KitchenDutyCard } from "./duty-card";
@@ -13,16 +15,15 @@ export function WeekSelector({week, path}: {week:string; path:string}) {
       <p className="text-center text-sm font-semibold">{dateText(week)}<br />– {dateText(addDays(week,6))}</p>
       <Link className="button button-secondary" href={`${path}?week=${addDays(week,7)}`} aria-label="Tuần sau">→</Link>
     </div>
-    <form action={path} className="flex items-end gap-2">
-      <label className="min-w-0 flex-1 text-sm">Chọn ngày trong tuần<input className="auth-input mt-1 min-w-0" name="week" type="date" defaultValue={week} required /></label>
+    <Form action={path} className="flex items-end gap-2">
+      <label className="min-w-0 flex-1 text-sm">Chọn ngày trong tuần<input key={week} className="auth-input mt-1 min-w-0" name="week" type="date" defaultValue={week} required /></label>
       <button className="button button-secondary">Xem</button>
-    </form>
+    </Form>
   </div>;
 }
 function Empty({data}: {data:KitchenWeek}) {
-  return <p role={data.error ? "alert" : "status"} className={data.error ? "text-sm text-red-800" : "text-sm text-muted"}>
-    {data.error ?? "Tuần này chưa có lịch nấu/rửa."}
-  </p>;
+  if (data.error) return <DataError message={data.error} />;
+  return <p role="status" className="text-sm text-muted">Tuần này chưa có lịch nấu/rửa.</p>;
 }
 export function KitchenHome({data,profile}: {data:KitchenWeek;profile:FamilyProfile}) {
   const own = data.duties.filter(d => d.date === data.today && responsibleId(d) === profile.id);
@@ -57,4 +58,3 @@ export function KitchenWeekView({data,profile,history=false}: {data:KitchenWeek;
     </>}
   </Card>;
 }
-

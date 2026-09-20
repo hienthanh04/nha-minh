@@ -23,7 +23,7 @@ export async function login(_previous: AuthFormState, form: FormData): Promise<A
       return { error: "Chưa thể đăng nhập. Kiểm tra kết nối hoặc nhờ quản trị viên kiểm tra tài khoản." };
     }
   } catch {
-    return { error: "Không thể kết nối đăng nhập. Vui lòng kiểm tra mạng và cấu hình Supabase rồi thử lại." };
+    return { error: "Không thể kết nối đăng nhập. Vui lòng kiểm tra mạng rồi thử lại." };
   }
   revalidatePath("/", "layout");
   // /login checks the verified user and profile before redirecting to Home.

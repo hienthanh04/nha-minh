@@ -8,9 +8,13 @@ import { DinnerHistory } from "@/components/dinner/views";
 import { addDays } from "@/lib/kitchen/rules";
 import { getHousework } from "@/lib/housework/queries";
 import { HouseworkHistory } from "@/components/housework/views";
-export default async function HistoryPage({searchParams}: {searchParams: Promise<{week?:string}>}) {
+import { getFood } from "@/lib/food/queries";
+import { foodPage } from "@/lib/food/rules";
+import { FoodHistory } from "@/components/food/views";
+export default async function HistoryPage({searchParams}: {searchParams: Promise<{week?:string; foodPage?:string}>}) {
   const profile = await requireProfile();
-  const week = selectedWeek((await searchParams).week);
-  const [data, dinner, housework] = await Promise.all([getKitchenWeek(week), getDinner(week,addDays(week,6)), getHousework(week)]);
-  return <HistoryScreen kitchen={<KitchenWeekView data={data} profile={profile} history/>} dinner={<DinnerHistory data={dinner} profile={profile} week={week}/>} housework={<HouseworkHistory data={housework}/>} />;
+  const params = await searchParams;
+  const week = selectedWeek(params.week);
+  const [data, dinner, housework, food] = await Promise.all([getKitchenWeek(week), getDinner(week,addDays(week,6)), getHousework(week), getFood(foodPage(params.foodPage))]);
+  return <HistoryScreen kitchen={<KitchenWeekView data={data} profile={profile} history/>} dinner={<DinnerHistory data={dinner} profile={profile} week={week}/>} housework={<HouseworkHistory data={housework}/>} food={<FoodHistory data={food} week={week}/>} />;
 }

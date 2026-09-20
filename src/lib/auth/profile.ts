@@ -3,6 +3,9 @@ export type FamilyProfile = {
   display_name: string;
   role: "member" | "admin";
   member_slot: number;
+  avatar_path?: string | null;
+  profile_setup_at?: string | null;
+  updated_at?: string;
 };
 
 // Validate the returned row as well as its relationship to the verified Auth user.
@@ -19,4 +22,3 @@ export function isFamilyProfile(value: unknown, userId: string): value is Family
 export function canAccessAdmin(profile: FamilyProfile) {
   return profile.role === "admin";
 }
-

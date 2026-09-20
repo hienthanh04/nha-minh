@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { checkInDinner, setDinnerPlan, type DinnerResult } from "@/lib/dinner/actions";
-import { timeText } from "@/lib/kitchen/rules";
+import { timeText } from "@/lib/date-format";
 import type { DinnerPlan } from "@/lib/dinner/rules";
 
 export function DinnerControls({date,today,plan,at,planner=false,admin=false}: {
@@ -16,7 +16,8 @@ export function DinnerControls({date,today,plan,at,planner=false,admin=false}: {
   const router=useRouter();
   const editable=date>=today;
   function run(operation:()=>Promise<DinnerResult>) {
-    if (busy.current) return;
+    if (busy.current || pending) return;
+    if (!navigator.onLine) { setResult({ok:false,message:"Đang mất kết nối. Chưa lưu thay đổi; hãy thử lại khi có mạng."}); return; }
     busy.current=true;setResult(null);
     startTransition(async()=>{
       try {

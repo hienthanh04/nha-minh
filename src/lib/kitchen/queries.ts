@@ -4,9 +4,8 @@ import { requireProfile } from "@/lib/auth/session";
 import { addDays, mondayOf, vietnamToday, type KitchenDuty, type KitchenMember, type KitchenSlot } from "./rules";
 
 export type KitchenWeek = { week: string; today: string; duties: KitchenDuty[]; members: KitchenMember[]; error: string | null };
-export async function getKitchenWeek(week: string): Promise<KitchenWeek> {
+export async function getKitchenWeek(week: string, today = vietnamToday()): Promise<KitchenWeek> {
   await requireProfile();
-  const today = vietnamToday();
   const result: KitchenWeek = { week, today, duties: [], members: [], error: null };
   try {
     const db = await createClient();
@@ -24,7 +23,7 @@ export async function getKitchenWeek(week: string): Promise<KitchenWeek> {
     result.members = members.data;
     if (result.duties.length && result.duties.length !== 15) result.error = "Lịch tuần chưa đủ 15 công. Hãy nhờ quản trị viên kiểm tra.";
   } catch {
-    result.error = "Chưa tải được lịch bếp. Kiểm tra kết nối và bảo đảm đã chạy migration Phase 4, rồi tải lại.";
+    result.error = "Chưa tải được lịch bếp. Kiểm tra kết nối rồi thử lại.";
   }
   return result;
 }

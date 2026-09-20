@@ -1,4 +1,5 @@
 "use client";
+import { vietnamDateTimeInput, correctedVietnamTimestamp } from "@/lib/date-format";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { adminSetDinnerPlan, adminCorrectDinner, type DinnerResult } from "@/lib/dinner/actions";
@@ -11,7 +12,8 @@ export function DinnerAdminEditor({member,date,today,plan,at}:{member:string;dat
   const busy=useRef(false);
   const router=useRouter();
   function run(operation:()=>Promise<DinnerResult>) {
-    if (busy.current) return;
+    if (busy.current || pending) return;
+    if (!navigator.onLine) { setResult({ok:false,message:"Đang mất kết nối. Chưa lưu thay đổi; hãy thử lại khi có mạng."}); return; }
     busy.current=true;setResult(null);
     startTransition(async()=>{
       try {
@@ -30,17 +32,17 @@ export function DinnerAdminEditor({member,date,today,plan,at}:{member:string;dat
     </form>
     <p className="text-sm">{at?`✅ Đã ăn lúc ${timeText(at)}`:"Chưa xác nhận ăn"}</p>
     {at && <form action={()=>run(()=>adminCorrectDinner(member,date,at,null))} className="space-y-3">
-      <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={pending}/>Tôi xác nhận bỏ lần check-in nhầm này.</label>
+      <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={pending}/>Tôi xác nhận bỏ lần xác nhận nhầm này.</label>
       <button className="button button-secondary w-full" disabled={pending}>Bỏ xác nhận nhầm</button>
     </form>}
     {date<=today && plan==="eating" && <details>
       <summary className="text-sm">Sửa / bổ sung thời điểm đã ăn</summary>
       <form className="mt-3 space-y-3" action={form=>{
         const value=String(form.get("at")??"");
-        run(()=>adminCorrectDinner(member,date,at,value+":00+07:00"));
+        run(()=>adminCorrectDinner(member,date,at,correctedVietnamTimestamp(value, at)));
       }}>
         <label className="block text-sm">Thời điểm · giờ Việt Nam<input className="auth-input mt-1 min-w-0" type="datetime-local" name="at" required disabled={pending}
-          key={at??"none"} defaultValue={at?new Date(new Date(at).getTime()+7*3600000).toISOString().slice(0,16):""}/></label>
+          key={at??"none"} defaultValue={vietnamDateTimeInput(at)}/></label>
         <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={pending}/>Tôi xác nhận thời điểm này là đúng.</label>
         <button className="button button-secondary w-full" disabled={pending}>Lưu thời điểm</button>
       </form>

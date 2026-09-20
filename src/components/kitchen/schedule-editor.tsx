@@ -14,13 +14,14 @@ export function ScheduleEditor({week, initial, members, template=false, today, b
   const router=useRouter();
   const missing = members.length !== 5;
   return <form className="space-y-4" action={form=>{
-    if (busy.current) return;
+    if (busy.current || pending) return;
+    if (!navigator.onLine) { setResult({ok:false,message:"Đang mất kết nối. Chưa lưu thay đổi; hãy thử lại khi có mạng."}); return; }
     const validation = validateSlots(slots,members);
     if (validation) { setResult({ok:false,message:validation}); return; }
     busy.current=true;
     setResult(null);
     startTransition(async()=>{
-      try {setResult(await saveKitchenSchedule(week,slots,template,form.get("correctPast")==="on"));}
+      try {const next = await saveKitchenSchedule(week,slots,template,form.get("correctPast")==="on"); setResult(next); if (next.login) router.replace("/login");}
       catch {setResult({ok:false,message:"Chưa lưu được. Kiểm tra kết nối rồi tải lại trước khi thử tiếp."});}
       finally {busy.current=false;router.refresh();}
     });

@@ -1,8 +1,9 @@
+import { DataError } from "@/components/data-status";
 import Link from "next/link";
 import { BrushCleaning } from "lucide-react";
 import { Card, CardHeading } from "@/components/ui";
 import { WeekSelector } from "@/components/kitchen/week-view";
-import { addDays, dateText, timeText } from "@/lib/kitchen/rules";
+import { addDays, dateText, timeText } from "@/lib/date-format";
 import type { HouseworkData } from "@/lib/housework/queries";
 import { houseworkStatus } from "@/lib/housework/rules";
 import type { FamilyProfile } from "@/lib/auth/profile";
@@ -20,14 +21,14 @@ export function HouseworkHome({ data, profile }: { data: HouseworkData; profile:
   const checkin = data.checkins.find(c => c.date === data.today);
   return <Card>
     <CardHeading icon={BrushCleaning} title="Việc nhà tuần này" />
-    {data.error ? <p role="alert" className="text-sm text-red-800">{data.error}</p> : !assignment ? <>
+    {data.error ? <DataError message={data.error ?? "Không thể tải dữ liệu lúc này."} /> : !assignment ? <>
       <p>Tuần này chưa có phân công việc nhà.</p>
       <SetupHint admin={profile.role === "admin"} />
     </> : <>
       <p className="font-semibold">{member?.id === profile.id ? "Tuần này tới lượt bạn" : `Tuần này: ${member?.display_name ?? "Chưa đọc được tên"}`}</p>
       <p className="mb-4 mt-1 text-sm text-muted">{dateText(data.week)} – {dateText(addDays(data.week, 6))}</p>
       {checkin ? <p className="completed">✅ Đã làm hôm nay lúc {timeText(checkin.completed_at)}</p>
-        : member?.id === profile.id ? <HouseworkCheckinButton today={data.today} />
+        : member?.id === profile.id ? <HouseworkCheckinButton key={data.today} today={data.today} />
         : <p className="text-sm text-muted">⏳ Hôm nay: Chưa xác nhận</p>}
       {checkin && <details className="mt-3 text-sm text-muted">
         <summary>Sửa xác nhận nhầm</summary>
@@ -42,7 +43,7 @@ export function HouseworkSchedule({ data, admin }: { data: HouseworkData; admin:
   return <Card>
     <CardHeading icon={BrushCleaning} title="Lượt việc nhà" />
     <WeekSelector week={data.week} path="/lich" />
-    {data.error ? <p role="alert" className="text-red-800">{data.error}</p> : <ul className="space-y-3">
+    {data.error ? <DataError message={data.error ?? "Không thể tải dữ liệu lúc này."} /> : <ul className="space-y-3">
       {[data.week, addDays(data.week, 7)].map((week, index) => {
         const assignment = data.weeks.find(w => w.week_start === week);
         const member = data.members.find(m => m.id === assignment?.responsible_member_id);
@@ -63,7 +64,7 @@ export function HouseworkHistory({ data }: { data: HouseworkData }) {
   return <Card>
     <CardHeading icon={BrushCleaning} title="Lịch sử việc nhà" />
     <WeekSelector week={data.week} path="/lich-su" />
-    {data.error ? <p role="alert" className="text-red-800">{data.error}</p> : <>
+    {data.error ? <DataError message={data.error ?? "Không thể tải dữ liệu lúc này."} /> : <>
       <p className="mb-3 font-semibold">{assignment ? `Phụ trách: ${member?.display_name ?? "Chưa đọc được tên"}` : "Tuần này chưa có phân công việc nhà."}</p>
       <ul className="space-y-2">
         {Array.from({ length: 7 }, (_, i) => addDays(data.week, i)).map(date => {

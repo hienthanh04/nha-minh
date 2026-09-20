@@ -1,7 +1,7 @@
 import "server-only";
 import { requireProfile } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { addDays, mondayOf, vietnamToday } from "@/lib/kitchen/rules";
+import { addDays, mondayOf, vietnamToday } from "@/lib/date-format";
 import type { HouseworkWeek, HouseworkMember, HouseworkCheckin } from "./rules";
 
 export type HouseworkData = {
@@ -9,9 +9,8 @@ export type HouseworkData = {
   checkins: HouseworkCheckin[]; error: string | null;
 };
 
-export async function getHousework(week: string): Promise<HouseworkData> {
+export async function getHousework(week: string, today = vietnamToday()): Promise<HouseworkData> {
   await requireProfile();
-  const today = vietnamToday();
   const result: HouseworkData = { week, today, members: [], weeks: [], checkins: [], error: null };
   try {
     const db = await createClient();
@@ -31,7 +30,7 @@ export async function getHousework(week: string): Promise<HouseworkData> {
     result.weeks = weeks.data;
     result.checkins = checkins.data;
   } catch {
-    result.error = "Chưa tải được việc nhà. Kiểm tra kết nối và bảo đảm đã chạy migration Phase 6, rồi tải lại.";
+    result.error = "Chưa tải được việc nhà. Kiểm tra kết nối rồi thử lại.";
   }
   return result;
 }

@@ -1,3 +1,4 @@
+import { DataError } from "@/components/data-status";
 import { requireAdmin } from "@/lib/auth/session";
 import { getHousework, getHouseworkRotation } from "@/lib/housework/queries";
 import { addDays, dateText, selectedWeek } from "@/lib/kitchen/rules";
@@ -14,7 +15,7 @@ export default async function HouseworkAdminPage({ searchParams }: { searchParam
   return <>
     <PageHeading eyebrow="Quản trị gia đình" title="Phân công việc nhà" description="Một người mỗi tuần · Xác nhận từng ngày" />
     <WeekSelector week={week} path="/khac/quan-tri/viec-nha" />
-    {data.error || rotation.error ? <Card><p role="alert" className="text-red-800">{data.error ?? rotation.error}</p></Card> : <div className="space-y-4">
+    {data.error || rotation.error ? <Card><DataError message={data.error ?? rotation.error ?? "Không thể tải dữ liệu lúc này."} /></Card> : <div className="space-y-4">
       <Card>
         <h2 className="mb-4 text-lg font-bold">Thứ tự luân phiên</h2>
         <RotationEditor key={week + rotation.effective} week={week} members={data.members} initial={rotation.order} effective={rotation.effective} />

@@ -32,8 +32,8 @@ test("admin can access admin", () => {
 });
 
 const baseUrl = process.env.TEST_BASE_URL;
-test("HTTP: anonymous visitors are redirected on all five protected routes", { skip: !baseUrl }, async () => {
-  for (const path of ["/", "/lich", "/lich-su", "/khac", "/khac/quan-tri"]) {
+test("HTTP: anonymous visitors are redirected on all protected routes", { skip: !baseUrl }, async () => {
+  for (const path of ["/", "/lich", "/lich-su", "/khac", "/khac/quan-tri", "/khac/quan-tri/bua-toi", "/khac/quan-tri/viec-nha", "/khac/quan-tri/do-an"]) {
     const response = await fetch(new URL(path, baseUrl), { redirect: "manual" });
     assert.ok([303, 307].includes(response.status), path + ": " + response.status);
     assert.equal(new URL(response.headers.get("location"), baseUrl).pathname, "/login");

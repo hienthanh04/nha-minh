@@ -4,7 +4,7 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
-      profiles: { Row: { id: string; display_name: string; role: "member" | "admin"; member_slot: number; created_at: string; updated_at: string }; Insert: Omit<Database["public"]["Tables"]["profiles"]["Row"], "created_at" | "updated_at"> & Partial<Pick<Database["public"]["Tables"]["profiles"]["Row"], "created_at" | "updated_at">>; Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>; Relationships: [] };
+      profiles: { Row: { id: string; display_name: string; role: "member" | "admin"; member_slot: number; avatar_path: string | null; profile_setup_at: string | null; created_at: string; updated_at: string }; Insert: Omit<Database["public"]["Tables"]["profiles"]["Row"], "created_at" | "updated_at" | "avatar_path" | "profile_setup_at"> & Partial<Pick<Database["public"]["Tables"]["profiles"]["Row"], "created_at" | "updated_at" | "avatar_path" | "profile_setup_at">>; Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>; Relationships: [] };
       kitchen_templates: { Row: { id: string; effective_from: string; created_at: string; updated_at: string }; Insert: Omit<Database["public"]["Tables"]["kitchen_templates"]["Row"], "id" | "created_at" | "updated_at"> & Partial<Pick<Database["public"]["Tables"]["kitchen_templates"]["Row"], "id" | "created_at" | "updated_at">>; Update: Partial<Database["public"]["Tables"]["kitchen_templates"]["Insert"]>; Relationships: [] };
       kitchen_template_slots: { Row: { id: string; template_id: string; weekday: number; duty_type: "cook" | "dishes"; slot_number: number; assigned_to: string }; Insert: Omit<Database["public"]["Tables"]["kitchen_template_slots"]["Row"], "id"> & Partial<Pick<Database["public"]["Tables"]["kitchen_template_slots"]["Row"], "id">>; Update: Partial<Database["public"]["Tables"]["kitchen_template_slots"]["Insert"]>; Relationships: [] };
       kitchen_duties: { Row: { id: string; date: string; duty_type: "cook" | "dishes"; slot_number: number; assigned_to: string; delegated_to: string | null; completed_by: string | null; status: "unconfirmed" | "completed"; completed_at: string | null; created_at: string; updated_at: string }; Insert: Omit<Database["public"]["Tables"]["kitchen_duties"]["Row"], "id" | "created_at" | "updated_at"> & Partial<Pick<Database["public"]["Tables"]["kitchen_duties"]["Row"], "id" | "created_at" | "updated_at">>; Update: Partial<Database["public"]["Tables"]["kitchen_duties"]["Insert"]>; Relationships: [] };
@@ -19,6 +19,12 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      save_my_profile: { Args: { p_name: string; p_avatar: string | null; p_expected: string }; Returns: undefined };
+      food_save_households: { Args: { p_items: Json }; Returns: undefined };
+      food_initialize: { Args: { p_household: string }; Returns: undefined };
+      food_receive: { Args: { p_id: string; p_expected: string }; Returns: undefined };
+      food_finish: { Args: { p_id: string; p_expected: string }; Returns: undefined };
+      food_correct: { Args: { p_id: string; p_expected: string; p_status: "waiting" | "active" | "finished"; p_start: string | null; p_finished: string | null; p_note: string; p_successor_expected: string | null }; Returns: undefined };
       housework_ensure_week: { Args: { p_week: string }; Returns: undefined };
       housework_save_rotation: { Args: { p_week: string; p_members: string[] }; Returns: undefined };
       housework_assign_week: { Args: { p_week: string; p_member: string; p_expected?: string | null }; Returns: undefined };

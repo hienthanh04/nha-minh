@@ -1,6 +1,6 @@
 import { Check, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { timeLabel } from "@/lib/mock-data";
+import { timeLabel } from "@/lib/date-format";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <section className={`card ${className}`}>{children}</section>;

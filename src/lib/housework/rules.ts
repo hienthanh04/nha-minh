@@ -1,14 +1,11 @@
+import { validBusinessDate } from "../date-format.ts";
 import type { Database } from "@/lib/supabase/database.types";
 
 export type HouseworkWeek = Database["public"]["Tables"]["housework_weeks"]["Row"];
 export type HouseworkCheckin = Database["public"]["Tables"]["housework_checkins"]["Row"];
 export type HouseworkMember = { id: string; display_name: string; member_slot: number };
 
-export function validHouseworkDate(value: unknown): value is string {
-  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value < "2000-01-01" || value > "2100-12-31") return false;
-  const parsed = new Date(value + "T00:00:00Z");
-  return Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
-}
+export const validHouseworkDate = validBusinessDate;
 
 export function validateOrder(order: string[], members: HouseworkMember[]) {
   if (members.length !== 5 || order.length !== 5 || new Set(order).size !== 5 ||

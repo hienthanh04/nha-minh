@@ -1,15 +1,17 @@
+import { Avatar } from "@/components/avatar";
+import { DataError } from "@/components/data-status";
 import Link from "next/link";
 import { Utensils, Users } from "lucide-react";
 import { Card, CardHeading } from "@/components/ui";
 import { WeekSelector } from "@/components/kitchen/week-view";
-import { addDays, dateText, timeText } from "@/lib/kitchen/rules";
+import { addDays, dateText, timeText } from "@/lib/date-format";
 import { dinnerFor, dinnerStatus } from "@/lib/dinner/rules";
 import type { DinnerData } from "@/lib/dinner/queries";
 import type { FamilyProfile } from "@/lib/auth/profile";
 import { DinnerControls } from "./controls";
 
 function DinnerError({error}:{error:string}) {
-  return <p role="alert" className="text-sm text-red-800">{error}</p>;
+  return <DataError message={error} />;
 }
 export function DinnerHome({data,profile}:{data:DinnerData;profile:FamilyProfile}) {
   const own=dinnerFor(profile.id,data.today,data.plans,data.checkins);
@@ -19,11 +21,11 @@ export function DinnerHome({data,profile}:{data:DinnerData;profile:FamilyProfile
   });
   return <>
     <Card>
-      <CardHeading icon={Utensils} title="Bữa tối của bạn"/>
-      {data.error ? <DinnerError error={data.error}/> : <DinnerControls date={data.today} today={data.today} {...own} admin={profile.role==="admin"}/>}
+      <CardHeading icon={Utensils} title="Ăn tối của bạn"/>
+      {data.error ? <DinnerError error={data.error}/> : <DinnerControls key={data.today} date={data.today} today={data.today} {...own} admin={profile.role==="admin"}/>}
     </Card>
     <Card>
-      <CardHeading icon={Users} title="Cả nhà ăn tối"/>
+      <CardHeading icon={Users} title="Tình hình ăn tối cả nhà"/>
       {data.error ? <DinnerError error={data.error}/> : <>
         {data.members.length!==5 && <p className="preview-note mb-3">Đang có {data.members.length}/5 hồ sơ. Quản trị viên cần hoàn tất hồ sơ còn thiếu.</p>}
         <ul className="family-list" aria-label="Trạng thái bữa tối của gia đình">
@@ -31,14 +33,14 @@ export function DinnerHome({data,profile}:{data:DinnerData;profile:FamilyProfile
             const state=dinnerFor(m.id,data.today,data.plans,data.checkins);
             const status=dinnerStatus(state.plan,state.at);
             return <li key={m.id} className="family-row">
-              <span className="avatar avatar-teal" aria-hidden="true">{m.display_name.slice(0,1).toUpperCase()}</span>
+              <Avatar id={m.id} name={m.display_name} path={m.avatar_path} />
               <span className="min-w-0 flex-1 break-words font-semibold">{m.display_name}{m.id===profile.id && <span className="ml-1 text-xs font-normal text-muted">Bạn</span>}</span>
               <span className={`status status-${status.tone}`}>{status.icon} {status.label}</span>
             </li>;
           })}
         </ul>
         <p className="save-food-note">{waiting.length ? `Nhớ để phần cho: ${waiting.map(m=>m.display_name).join(", ")}.` : "Không còn người báo Có ăn đang chờ ăn."}</p>
-        <p className="mt-2 text-xs text-muted">Chưa báo vẫn là chưa rõ lựa chọn. Tải lại để xem thay đổi từ thiết bị khác.</p>
+        <p className="mt-2 text-xs text-muted">Chưa báo vẫn là chưa rõ lựa chọn. Bấm Cập nhật dữ liệu để xem thay đổi từ thiết bị khác.</p>
       </>}
     </Card>
   </>;

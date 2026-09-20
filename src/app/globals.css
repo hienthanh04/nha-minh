@@ -20,9 +20,9 @@ button:disabled { cursor: default; opacity: .55; }
 :focus-visible { outline: 3px solid #b66818; outline-offset: 4px; }
 main:focus { outline: none; }
 .app-shell { max-width: 560px; min-height: 100dvh; margin: 0 auto; padding-top: env(safe-area-inset-top); padding-bottom: calc(82px + env(safe-area-inset-bottom)); background: #f6f8f8; }
-.brand-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px 8px; }
+.brand-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px 8px; }
 .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 11px; background: #076b60; color: white; }
-.prototype-badge { font-size: 12px; color: #64716f; border: 1px solid #dce4e2; border-radius: 20px; padding: 4px 9px; white-space: nowrap; }
+.family-badge { font-size: 12px; color: #64716f; border: 1px solid #dce4e2; border-radius: 20px; padding: 4px 9px; white-space: nowrap; }
 .card { background: white; border: 1px solid #e3e9e7; border-radius: 22px; padding: 20px; box-shadow: 0 2px 4px #263e3503; }
 .kitchen-card { border-color: #c5ded7; background: linear-gradient(140deg, #f1f9f5, #fff 80%); }
 .duty-item + .duty-item { margin-top: 18px; padding-top: 18px; border-top: 1px solid #e4ebe7; }
@@ -36,7 +36,7 @@ main:focus { outline: none; }
 .icon-button, .small-link { display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; color: #647571; }
 .icon-button:hover, .small-link:hover { background: #eaf2ee; }
 .small-link { margin: -10px -10px -10px 0; }
-.text-button { min-height: 44px; color: #076b60; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.text-button { display: inline-flex; align-items: center; min-height: 44px; color: #076b60; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
 .avatar { display: inline-flex; flex-shrink: 0; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 50%; font-size: 13px; font-weight: 700; }
 .avatar-large { width: 52px; height: 52px; font-size: 20px; outline: 5px solid white; }
 .avatar-teal { background: #dceee7; color: #246457; }
@@ -70,3 +70,18 @@ summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-weight: 600; 
 @media (min-width: 640px) { .app-shell { border-inline: 1px solid #e0e7e3; } .brand-bar { padding-inline: 28px; } }
 @media (max-width: 359px) { .card { padding: 16px; } .family-row { gap: 7px; flex-wrap: wrap; } .status { font-size: 12px; } .food-route { padding: 12px; gap: 10px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Long family names and native Safari date fields must fit narrow screens. */
+.card, .dialog, fieldset, .auth-input, select { min-width: 0; max-width: 100%; }
+.card, .dialog, main { overflow-wrap: anywhere; }
+.family-row { display: grid; grid-template-columns: 35px minmax(0, 1fr); }
+.family-row .status { grid-column: 2; justify-self: start; }
+.completed { padding: 10px; text-align: center; flex-wrap: wrap; }
+.dialog { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+.auth-input[type="date"], .auth-input[type="datetime-local"] { appearance: none; }
+input[type="checkbox"] { flex-shrink: 0; width: 20px; height: 20px; accent-color: #076b60; }
+label:has(> input[type="checkbox"]) { min-height: 44px; align-items: center; }
+@media (min-width: 430px) {
+  .family-row { grid-template-columns: 35px minmax(0, 1fr) auto; }
+  .family-row .status { grid-column: 3; grid-row: 1; }
+}

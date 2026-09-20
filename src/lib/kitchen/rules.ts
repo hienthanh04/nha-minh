@@ -1,3 +1,5 @@
+import { addDays } from "../date-format.ts";
+export { ZONE, vietnamToday, addDays, mondayOf, selectedWeek, dateText, timeText } from "../date-format.ts";
 export type KitchenMember = { id: string; display_name: string; member_slot: number };
 export type KitchenSlot = { weekday: number; duty_type: "cook" | "dishes"; slot_number: number; assigned_to: string };
 export type KitchenDuty = {
@@ -5,32 +7,6 @@ export type KitchenDuty = {
   assigned_to: string; delegated_to: string | null; completed_by: string | null;
   status: "unconfirmed" | "completed"; completed_at: string | null; updated_at: string;
 };
-export const ZONE = "Asia/Ho_Chi_Minh";
-export function vietnamToday(now = new Date()) {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
-}
-export function addDays(date: string, days: number) {
-  const value = new Date(date + "T00:00:00Z");
-  value.setUTCDate(value.getUTCDate() + days);
-  return value.toISOString().slice(0, 10);
-}
-export function mondayOf(date: string) {
-  const day = new Date(date + "T00:00:00Z").getUTCDay();
-  return addDays(date, -((day + 6) % 7));
-}
-export function selectedWeek(value: unknown, today = vietnamToday()) {
-  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return mondayOf(today);
-  const parsed = new Date(value + "T00:00:00Z");
-  if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0,10) !== value ||
-      value < "2000-01-01" || value > "2100-12-31") return mondayOf(today);
-  return mondayOf(value);
-}
-export function dateText(date: string) {
-  return new Intl.DateTimeFormat("vi-VN", { timeZone: ZONE, weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(date + "T00:00:00+07:00"));
-}
-export function timeText(at: string) {
-  return new Intl.DateTimeFormat("vi-VN", { timeZone: ZONE, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(at));
-}
 export function blankSlots(): KitchenSlot[] {
   return Array.from({length: 5}, (_, d) => [
     { weekday: d+1, duty_type: "cook" as const, slot_number: 1, assigned_to: "" },

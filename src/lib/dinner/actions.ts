@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { getAccess } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { vietnamToday } from "@/lib/kitchen/rules";
+import { vietnamToday } from "@/lib/date-format";
 import { validDinnerDate, validPlan, mayChangePlan, type DinnerPlan } from "./rules";
 
 export type DinnerResult = { ok:boolean; message:string; login?:boolean };

@@ -1,4 +1,5 @@
 "use client";
+import { vietnamDateTimeInput, correctedVietnamTimestamp } from "@/lib/date-format";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { completeDuty, delegateDuty, correctDuty, type KitchenResult } from "@/lib/kitchen/actions";
@@ -13,11 +14,12 @@ export function KitchenDutyCard({ duty, members, userId, admin, today }: {
   const [message, setMessage] = useState<KitchenResult | null>(null);
   const name = (id: string | null) => members.find(m => m.id === id)?.display_name ?? "Thành viên";
   function run(action: () => Promise<KitchenResult>) {
-    if (busy.current) return;
+    if (busy.current || pending) return;
+    if (!navigator.onLine) { setMessage({ok:false,message:"Đang mất kết nối. Chưa lưu thay đổi; hãy thử lại khi có mạng."}); return; }
     busy.current = true;
     setMessage(null);
     startTransition(async () => {
-      try { setMessage(await action()); }
+      try { const next = await action(); setMessage(next); if (next.login) router.replace("/login"); }
       catch { setMessage({ok:false,message:"Chưa lưu được. Kiểm tra kết nối rồi tải lại để xem trạng thái mới nhất."}); }
       finally { busy.current = false; router.refresh(); }
     });
@@ -62,7 +64,7 @@ export function KitchenDutyCard({ duty, members, userId, admin, today }: {
           const member = String(form.get("completer") ?? "");
           const at = String(form.get("at") ?? "");
           if (member && !at) { setMessage({ok:false,message:"Hãy nhập thời điểm xác nhận."}); return; }
-          run(() => correctDuty(duty.id, duty.updated_at, member || null, member ? at + ":00+07:00" : null));
+          run(() => correctDuty(duty.id, duty.updated_at, member || null, member ? correctedVietnamTimestamp(at, duty.completed_at) : null));
         }}>
           <p className="text-sm text-muted">Chỉ sửa khi ghi nhận nhầm. Phân công gốc và nhờ làm hộ được giữ nguyên.</p>
           <label className="block text-sm">Người thực sự làm
@@ -73,7 +75,7 @@ export function KitchenDutyCard({ duty, members, userId, admin, today }: {
           </label>
           <label className="block text-sm">Thời điểm xác nhận · giờ Việt Nam
             <input key={duty.completed_at ?? "no-time"} type="datetime-local" name="at" disabled={pending}
-              defaultValue={duty.completed_at ? new Date(new Date(duty.completed_at).getTime()+7*3600000).toISOString().slice(0,16) : ""}
+              defaultValue={vietnamDateTimeInput(duty.completed_at)}
               className="auth-input mt-1 min-w-0" />
           </label>
           <label className="flex items-start gap-2 text-sm"><input type="checkbox" required disabled={pending} className="mt-1" />Tôi xác nhận chỉnh sửa bản ghi này.</label>

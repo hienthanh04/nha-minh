@@ -1,8 +1,9 @@
 "use client";
+import { vietnamDateTimeInput, correctedVietnamTimestamp } from "@/lib/date-format";
 import { useState } from "react";
 import { saveHouseworkRotation, assignHouseworkWeek, correctHousework } from "@/lib/housework/actions";
 import { validateOrder, rotationPosition, type HouseworkMember, type HouseworkWeek } from "@/lib/housework/rules";
-import { addDays, dateText, mondayOf, timeText } from "@/lib/kitchen/rules";
+import { addDays, dateText, mondayOf, timeText } from "@/lib/date-format";
 import { HouseworkFeedback, useHouseworkAction } from "./controls";
 
 export function RotationEditor({ week, members, initial, effective }: {
@@ -55,16 +56,16 @@ export function HouseworkCorrection({ date, at }: { date: string; at: string | n
   const action = useHouseworkAction();
   return <div className="space-y-3">
     <p className="text-sm">{at ? `✅ Đã làm lúc ${timeText(at)}` : "Chưa xác nhận"}</p>
-    <form className="space-y-3" action={form => action.run(() => correctHousework(date, at, String(form.get("at")) + ":00+07:00"))}>
+    <form className="space-y-3" action={form => action.run(() => correctHousework(date, at, correctedVietnamTimestamp(String(form.get("at")), at)))}>
       <label className="block text-sm">Thời điểm thực tế · giờ Việt Nam
         <input key={at ?? "empty"} type="datetime-local" name="at" required disabled={action.pending} className="auth-input mt-1 min-w-0"
-          defaultValue={at ? new Date(Date.parse(at) + 7 * 3600000).toISOString().slice(0, 16) : ""} />
+          defaultValue={vietnamDateTimeInput(at)} />
       </label>
       <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={action.pending} />Tôi xác nhận thời điểm này là đúng.</label>
       <button className="button button-secondary w-full" disabled={action.pending}>Lưu sửa xác nhận</button>
     </form>
     {at && <form className="space-y-3" action={() => action.run(() => correctHousework(date, at, null))}>
-      <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={action.pending} />Tôi xác nhận bỏ lần check-in nhầm này.</label>
+      <label className="flex gap-2 text-sm"><input type="checkbox" required disabled={action.pending} />Tôi xác nhận bỏ lần xác nhận nhầm này.</label>
       <button className="button button-secondary w-full" disabled={action.pending}>Bỏ xác nhận nhầm</button>
     </form>}
     <HouseworkFeedback {...action} />

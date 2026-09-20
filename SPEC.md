@@ -1,6 +1,6 @@
-# Nhà Mình — Product specification
+# Gia tộc Trần Anh — Product specification
 
-Status: Phases 1–5 accepted by the user. Phase 6 connects housework rotation, daily check-ins and corrections. Apply the new Phase 6 migration and follow HOUSEWORK_SETUP.md for real-account checks. Food remains mock; stop before Phase 7. Business rules below remain unchanged.
+Status: Phases 1–7 accepted by the user. Phase 8 integration and UX changes implemented locally; see PHASE8_CHECKLIST.md for test evidence and outstanding real-account/iPhone checks. No Phase 8 database migration. Stop before Phase 9. Business rules remain unchanged.
 
 ## Purpose and scope
 
@@ -111,3 +111,11 @@ Use friendly cards, readable Vietnamese, large tap targets, visible focus and iP
 All business rules above remain required. Tests cover weekly allocation/actual counts, delegated credit, late confirmation, separate dinner states, weekly rotation, event-based food transitions and unauthorized access. Final acceptance includes production build, lint/typecheck, iPhone installation/session checks and all-five-account smoke tests. Real account names, emails, schedules, household order, credentials and deployment configuration are setup inputs, not invented production defaults.
 
 See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for phase order, schema decisions and verification gates.
+
+## Approved follow-up — Personal name and uploaded avatar
+
+- After first login, require the member to confirm their display name and optionally choose a photo before entering Home. Track completion once, including existing accounts when this update is applied.
+- Name: 1–60 characters. Photo may be skipped or removed; use the initial as fallback.
+- Later edits live at Khác → Hồ sơ của bạn. Only the authenticated member can change their own name/avatar through the member operation; role, slot, account ID and work history remain unchanged.
+- Private Supabase Storage bucket, family-only reads, owner-only upload/delete of unused objects. Browser/server resize and re-encode JPEG; signed-in image endpoint uses private/no-store responses. No public URLs or service-role runtime key.
+- Additive migration: 20260920000100_member_profiles.sql. See PROFILE_SETUP.md for applying it once and real-device verification. This is an explicitly requested addition after Phase 8; Phase 9 remains unstarted.

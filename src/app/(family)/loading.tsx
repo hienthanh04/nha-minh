@@ -1,3 +1,5 @@
+import { LoadingCard } from "@/components/loading-card";
+
 export default function Loading() {
-  return <p role="status" className="p-5 text-muted">Đang tải dữ liệu…</p>;
+  return <div className="space-y-4"><LoadingCard title="Đang mở trang" /><LoadingCard title="Thông tin gia đình" /></div>;
 }

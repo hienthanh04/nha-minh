@@ -12,9 +12,10 @@ export const getAccess = cache(async (): Promise<Access> => {
   try {
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
+    if (error && (error.name === "AuthRetryableFetchError" || !error.status || error.status >= 500)) return { status: "unavailable" };
     if (error || !user) return { status: "anonymous" };
     const { data, error: profileError } = await supabase.from("profiles")
-      .select("id, display_name, role, member_slot").eq("id", user.id).maybeSingle();
+      .select("*").eq("id", user.id).maybeSingle();
     if (profileError) return { status: "unavailable" };
     if (!isFamilyProfile(data, user.id)) return { status: "missing-profile" };
     return { status: "family", profile: data };
@@ -34,4 +35,3 @@ export async function requireAdmin() {
   if (!canAccessAdmin(profile)) redirect("/khac");
   return profile;
 }
-

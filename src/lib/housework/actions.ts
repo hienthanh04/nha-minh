@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { getAccess } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import { mondayOf, vietnamToday } from "@/lib/kitchen/rules";
+import { mondayOf, vietnamToday } from "@/lib/date-format";
 import { validHouseworkDate } from "./rules";
 
 export type HouseworkResult = { ok: boolean; message: string; login?: boolean };

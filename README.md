@@ -1,6 +1,10 @@
-# Nhà Mình — Phase 6 Housework
+# Gia tộc Trần Anh — Phase 8 Integration & UX
 
-A Vietnamese, mobile-first Next.js App Router app for five family members. Authentication, profiles, kitchen, dinner and housework now use Supabase. Food remains mock data. For this phase, follow [HOUSEWORK_SETUP.md](HOUSEWORK_SETUP.md): apply **only the new Phase 6 migration**, then configure five-member rotation in the app. Stop before Phase 7. Earlier setup: [AUTH_SETUP.md](AUTH_SETUP.md), [KITCHEN_SETUP.md](KITCHEN_SETUP.md), [DINNER_SETUP.md](DINNER_SETUP.md).
+A Vietnamese, mobile-first Next.js App Router app for five family members. All core features now use Supabase. Follow [FOOD_SETUP.md](FOOD_SETUP.md): apply **only the new Phase 7 migration**, configure real food households and explicitly initialize the first waiting batch. Phase 8 adds shared loading/retry states, offline feedback and foreground/reconnect/Vietnam-midnight refresh. Follow [PHASE8_CHECKLIST.md](PHASE8_CHECKLIST.md) before Phase 9; Phase 8 has no new SQL migration. Earlier setup: [AUTH_SETUP.md](AUTH_SETUP.md), [KITCHEN_SETUP.md](KITCHEN_SETUP.md), [DINNER_SETUP.md](DINNER_SETUP.md), [HOUSEWORK_SETUP.md](HOUSEWORK_SETUP.md).
+
+## Personal name and avatar update
+
+Follow [PROFILE_SETUP.md](PROFILE_SETUP.md) and apply only the new `20260920000100_member_profiles.sql` migration before trying this addition. It creates the private avatar bucket and one-time introduction step. Members can later edit their own name/photo under **Khác → Hồ sơ của bạn**. No Phase 9 deployment work is included.
 
 ## Run locally
 
@@ -21,6 +25,9 @@ The current machine also has Node 26 on its default PATH. Select Node 24 before 
 npm.cmd run test:kitchen
 npm.cmd run test:dinner
 npm.cmd run test:housework
+npm.cmd run test:food
+npm.cmd run test:integration
+npm.cmd run test:auth
 npm.cmd run test:db
 npm.cmd run lint
 npm.cmd run typecheck
@@ -33,24 +40,26 @@ To view the production build locally, run `npm run start` after building.
 
 - **Hôm nay:** cooking/dish completion, delegation in duty details, dinner choices/check-in, all five dinner statuses, housework check-in, and food finish/receive with confirmation.
 - **Lịch:** real kitchen week selector, duty details and late confirmation; real seven-day dinner planning; real housework assignment for the selected and following week.
-- **Lịch sử:** real kitchen totals/member trace, personal dinner history and seven-day housework history; food history remains mock.
-- **Khác:** real profile/logout, a clearly labeled mock member list, admin kitchen editors, dinner corrections and housework configuration/corrections at `/khac/quan-tri/viec-nha`.
+- **Lịch sử:** real kitchen totals/member trace, personal dinner history, seven-day housework history and food batches (20 per page, newest first).
+- **Khác:** real profile/logout and family members; admin kitchen, dinner, housework and food tools. Food administration is at `/khac/quan-tri/do-an`.
 
-Food fixture state lives in React memory and resets on reload. Kitchen, Dinner and Housework actions persist in Supabase.
+Kitchen, Dinner, Housework and Food actions persist in Supabase. No core feature uses mock data. Missing food configuration shows setup guidance, never fictional households.
 
 Kitchen business dates and confirmation times use Asia/Ho_Chi_Minh. Home displays only today's current responsibilities. A missing schedule is explicitly distinguished from a scheduled week with no personal duty today. Kitchen fixtures have been removed.
 
-Dinner plans and check-ins use separate existing tables. Missing plan means unknown. Server Actions derive the member from the verified session and refresh personal/family views after saving. RLS restricts writes; database triggers prevent contradictory plans/check-ins. Realtime, member undo, other feature editors and PWA deployment remain deferred.
+Dinner plans and check-ins use separate existing tables. Missing plan means unknown. Server Actions derive the member from the verified session and refresh personal/family views after saving. RLS restricts writes; database triggers prevent contradictory plans/check-ins. Realtime and member undo are intentionally deferred; existing admin corrections remain available. PWA/deployment belongs to Phase 9.
 
 ## Code map
 
 - `src/app/`: layout, Tailwind stylesheet and the four route pages.
-- `src/components/`: app shell, small reusable cards, Home, duty details and mock-state provider.
-- `src/lib/mock-data.ts`: all fictional identities/fixtures, small date/display helpers and UI types.
+- `src/components/`: app shell, reusable cards and feature components.
+- `src/lib/date-format.ts`: shared Vietnam business dates, 24-hour display, correction inputs and midnight timing.
 - `package.json`, `package-lock.json`: scripts and exact resolved dependencies.
 - `src/lib/kitchen/`, `src/components/kitchen/`: real kitchen queries, actions, rules and mobile components.
 - `src/lib/dinner/`, `src/components/dinner/`: real dinner queries, actions, rules, planner/history and corrections.
 - `src/lib/housework/`, `src/components/housework/`: real weekly assignments, daily check-in, rotation and corrections.
+- `src/lib/food/`, `src/components/food/`: event-driven food rotation, configuration, transitions and corrections.
+- `FOOD_SETUP.md`, `supabase/verify-food.sql`: Phase 7 migration instructions and read-only checks for the family database.
 - `HOUSEWORK_SETUP.md`, `supabase/verify-housework.sql`: Phase 6 migration instructions and read-only checks for the family database.
 - `scripts/test-dinner.mjs`, `supabase/tests/dinner.sql`: dinner states, dates, consistency and database permissions.
 - `SPEC.md`, `IMPLEMENTATION_PLAN.md`: agreed product rules and phased roadmap.
@@ -61,9 +70,9 @@ Copy .env.example to .env.local and set the Supabase URL and public key before l
 
 Read [PHASE2_CHECKLIST.md](PHASE2_CHECKLIST.md) for the Vietnamese walkthrough and [DATABASE_SETUP.md](DATABASE_SETUP.md) for policy details. Run both SQL migrations in filename order; the second fixes member/admin permissions, date restrictions and allocation/history constraints. Then run `supabase/verify.sql` and, on an empty family database, the rollback-only `supabase/tests/permissions.sql`. No remote database has been changed by the assistant.
 
-Run `npm.cmd run test:db` to execute all four migrations and permission checks in local, in-memory PostgreSQL. This never reads `.env.local` or contacts Supabase. Local build/lint success alone does not verify remote RLS.
+Run `npm.cmd run test:db` to execute all five migrations and permission checks in local, in-memory PostgreSQL. This never reads `.env.local` or contacts Supabase. Local build/lint success alone does not verify remote RLS.
 
-The handwritten types in `src/lib/supabase/database.types.ts` include kitchen/housework RPC signatures and existing tables; relation joins are not modeled. The server client reads profiles, kitchen, dinner and housework using the signed-in user's session.
+The handwritten types in `src/lib/supabase/database.types.ts` include kitchen/housework/food RPC signatures and existing tables; relation joins are not modeled. All reads/writes use the signed-in user's session.
 
 ## Phase 3 code and verification
 

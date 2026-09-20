@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nhà Mình · Bản xem thử",
-  description: "Giao diện mẫu cho việc bếp, bữa tối và việc nhà của gia đình.",
+  title: "Gia tộc Trần Anh",
+  description: "Cùng chăm chút việc bếp, bữa tối, việc nhà và đồ ăn gia đình.",
   robots: { index: false, follow: false },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#f6f8f8" };

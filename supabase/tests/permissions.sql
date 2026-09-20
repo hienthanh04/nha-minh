@@ -147,7 +147,7 @@ select pg_temp.expect_error($q$update public.kitchen_duties set assigned_to='f20
   where date='2030-01-07' and duty_type='cook' and slot_number=1$q$,'P0001','Uneven original allocation rejected');
 select pg_temp.expect_error($q$insert into public.kitchen_templates(effective_from) values ('2030-01-07')$q$,
   'P0001','Empty kitchen template rejected');
-set local role authenticated;
+-- Owner tests the unique-index constraint; Phase 7 tests checked admin operations.
 insert into public.food_households(id,name,rotation_position) values ('f3000000-0000-0000-0000-000000000001','TEST HOUSE',0);
 insert into public.food_batches(household_id,status) values ('f3000000-0000-0000-0000-000000000001','waiting');
 select pg_temp.expect_error($q$insert into public.food_batches(household_id,status,start_date)

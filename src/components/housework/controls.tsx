@@ -1,4 +1,5 @@
 "use client";
+import { ActionFeedback as HouseworkFeedback } from "@/components/data-status";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { checkInHousework, type HouseworkResult } from "@/lib/housework/actions";
@@ -10,7 +11,8 @@ export function useHouseworkAction() {
   const busy = useRef(false);
   const router = useRouter();
   function run(operation: () => Promise<HouseworkResult>) {
-    if (busy.current) return;
+    if (busy.current || pending) return;
+    if (!navigator.onLine) { setResult({ok:false,message:"Đang mất kết nối. Chưa lưu thay đổi; hãy thử lại khi có mạng."}); return; }
     busy.current = true;
     setResult(null);
     startTransition(async () => {
@@ -29,12 +31,7 @@ export function useHouseworkAction() {
   return { pending, result, run };
 }
 
-export function HouseworkFeedback({ pending, result }: { pending: boolean; result: HouseworkResult | null }) {
-  return <>
-    {pending && <p role="status" className="mt-2 text-sm text-muted">Đang lưu…</p>}
-    {result && <p role={result.ok ? "status" : "alert"} className={`mt-2 text-sm ${result.ok ? "text-teal" : "text-red-800"}`}>{result.message}</p>}
-  </>;
-}
+export { ActionFeedback as HouseworkFeedback } from "@/components/data-status";
 
 export function HouseworkCheckinButton({ today }: { today: string }) {
   const action = useHouseworkAction();
