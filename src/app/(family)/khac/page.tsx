@@ -1,4 +1,5 @@
 import { Avatar } from "@/components/avatar";
+import { InstallInstructions } from "@/components/install-instructions";
 import { Heart, Users } from "lucide-react";
 import { Card, CardHeading, PageHeading } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
@@ -30,6 +31,7 @@ export default async function MorePage() {
           <Avatar id={member.id} name={member.display_name} path={member.avatar_path} /><span className="flex-1 font-semibold">{member.display_name}</span>{member.id === profile.id && <span className="status status-success">Bạn</span>}
         </li>)}</ul>}
       </Card>
+      <InstallInstructions />
       <Card>
         <CardHeading icon={Heart} title="Về Gia tộc Trần Anh" />
         <div className="space-y-3 text-sm leading-relaxed text-muted">

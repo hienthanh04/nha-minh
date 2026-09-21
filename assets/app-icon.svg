@@ -1,0 +1,7 @@
+<!-- Project-owned placeholder: a home with a heart. No downloaded artwork or fonts. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#076b60"/>
+  <path d="M136 240 256 140 376 240" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M162 234v132h188V234" fill="none" stroke="#ffffff" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M256 322c-13-10-43-28-43-48 0-25 30-31 43-10 13-21 43-15 43 10 0 20-30 38-43 48Z" fill="#f4b16e"/>
+</svg>

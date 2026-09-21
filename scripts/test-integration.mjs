@@ -154,6 +154,7 @@ if (process.env.PHASE8_LAYOUT_PREVIEW === "1") {
   const { DinnerAdminEditor } = await import("../src/components/dinner/admin-editor.tsx");
   const { RotationEditor, HouseworkCorrection } = await import("../src/components/housework/admin-editor.tsx");
   const { HouseholdEditor, FoodCorrectionEditor } = await import("../src/components/food/admin-editor.tsx");
+  const { InstallInstructions } = await import("../src/components/install-instructions.tsx");
   const directory = new URL("../.next/static/chunks/", import.meta.url);
   const css = readdirSync(directory).filter(p => p.endsWith(".css")).map(p => readFileSync(new URL(p, directory), "utf8")).join("\n");
   const longProfile = { ...profile, display_name: "Thành viên kiểm thử có tên hiển thị rất dài" };
@@ -176,7 +177,7 @@ if (process.env.PHASE8_LAYOUT_PREVIEW === "1") {
     section("Sửa lượt đồ ăn", el(FoodCorrectionEditor, { batch, successor: null })),
   );
   const pages = {};
-  for (const [path, node] of [["/", home], ["/admin", admin], ["/profile", section("Giới thiệu bạn với nhà mình", el(ProfileEditor, { profile, onboarding: true }))]]) {
+  for (const [path, node] of [["/", home], ["/admin", admin], ["/install", el(InstallInstructions)], ["/profile", section("Giới thiệu bạn với nhà mình", el(ProfileEditor, { profile, onboarding: true }))]]) {
     pathname = path === "/admin" ? "/khac/quan-tri" : "/";
     pages[path] = '<!doctype html><html lang="vi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Kiểm tra bố cục — dữ liệu giả lập</title><style>' + css + '</style><body>' + render(el(AppShell, null, el("p", { className: "preview-note mb-4" }, "Chỉ kiểm tra bố cục · dữ liệu thử · nút không lưu"), node)) + '</body></html>';
   }

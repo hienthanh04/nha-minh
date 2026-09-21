@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node scripts/test-all.mjs",
+    "test:pwa": "node --test --test-isolation=none scripts/test-pwa.mjs",
+    "icons:generate": "node scripts/generate-icons.mjs",
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",

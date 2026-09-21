@@ -1,6 +1,6 @@
 # Gia tộc Trần Anh — Product specification
 
-Status: Phases 1–7 accepted by the user. Phase 8 integration and UX changes implemented locally; see PHASE8_CHECKLIST.md for test evidence and outstanding real-account/iPhone checks. No Phase 8 database migration. Stop before Phase 9. Business rules remain unchanged.
+Status: Phases 1–8 implemented. Phase 9 PWA/deployment preparation implemented locally; see PHASE9_DEPLOYMENT_CHECKLIST.md for validation and pending Vercel, real-account and iPhone checks. No Phase 9 migration. Business rules remain unchanged.
 
 ## Purpose and scope
 
@@ -118,4 +118,10 @@ See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for phase order, schema dec
 - Name: 1–60 characters. Photo may be skipped or removed; use the initial as fallback.
 - Later edits live at Khác → Hồ sơ của bạn. Only the authenticated member can change their own name/avatar through the member operation; role, slot, account ID and work history remain unchanged.
 - Private Supabase Storage bucket, family-only reads, owner-only upload/delete of unused objects. Browser/server resize and re-encode JPEG; signed-in image endpoint uses private/no-store responses. No public URLs or service-role runtime key.
-- Additive migration: 20260920000100_member_profiles.sql. See PROFILE_SETUP.md for applying it once and real-device verification. This is an explicitly requested addition after Phase 8; Phase 9 remains unstarted.
+- Additive migration: 20260920000100_member_profiles.sql. See PROFILE_SETUP.md for applying it once and real-device verification. This was an explicitly requested addition after Phase 8.
+
+## Phase 9 PWA identity
+
+- App name and short name: Gia tộc Trần Anh (user-approved rename), language vi, standalone display, root start URL and scope.
+- Native App Router manifest and local PNG/Apple icons; no third-party PWA framework, service worker, offline mutation queue or private response cache.
+- Installation guidance lives in Khác. Production HTTPS deployment and real iPhone session/install smoke tests follow PHASE9_DEPLOYMENT_CHECKLIST.md and remain manual until verified.
