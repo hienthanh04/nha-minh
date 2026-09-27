@@ -68,6 +68,8 @@ Prefer route pages, reusable UI components, plain TypeScript business helpers an
 
 ## Phase 6 — Housework
 
+Update approved 2026-09-27: all five family members can use the housework configuration/correction page. Migration `20260927000100_family_housework.sql` changes the two configuration RPC guards and adds a checked family correction RPC. Ordinary daily check-in still belongs only to the assigned person; future-week and history protections remain. See HOUSEWORK_PERMISSIONS_UPDATE.md. This supersedes admin-only housework editor references below.
+
 - Connect the five-member weekly rotation, configured start week and admin future-week edits.
 - Keep the dated weekly assignment as the source of truth for daily check-ins and history.
 - Phase 6 preserves all already-created weeks, including admin exceptions. New rotation versions affect only missing future weeks; the admin can edit an existing future week separately. Current-week initialization is allowed only if missing, and initial rotation setup may start this Monday. Later rotation edits start in a future week.

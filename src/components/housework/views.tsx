@@ -9,10 +9,8 @@ import { houseworkStatus } from "@/lib/housework/rules";
 import type { FamilyProfile } from "@/lib/auth/profile";
 import { HouseworkCheckinButton } from "./controls";
 
-function SetupHint({ admin }: { admin: boolean }) {
-  return admin
-    ? <Link className="button button-secondary mt-3 w-full" href="/khac/quan-tri/viec-nha">Thiết lập lượt việc nhà</Link>
-    : <p className="mt-2 text-sm text-muted">Hãy nhờ quản trị viên thiết lập phân công.</p>;
+function SetupHint() {
+  return <Link className="button button-secondary mt-3 w-full" href="/khac/quan-tri/viec-nha">Phân công & sửa việc nhà</Link>;
 }
 
 export function HouseworkHome({ data, profile }: { data: HouseworkData; profile: FamilyProfile }) {
@@ -23,7 +21,7 @@ export function HouseworkHome({ data, profile }: { data: HouseworkData; profile:
     <CardHeading icon={BrushCleaning} title="Việc nhà tuần này" />
     {data.error ? <DataError message={data.error ?? "Không thể tải dữ liệu lúc này."} /> : !assignment ? <>
       <p>Tuần này chưa có phân công việc nhà.</p>
-      <SetupHint admin={profile.role === "admin"} />
+      <SetupHint />
     </> : <>
       <p className="font-semibold">{member?.id === profile.id ? "Tuần này tới lượt bạn" : `Tuần này: ${member?.display_name ?? "Chưa đọc được tên"}`}</p>
       <p className="mb-4 mt-1 text-sm text-muted">{dateText(data.week)} – {dateText(addDays(data.week, 6))}</p>
@@ -32,14 +30,13 @@ export function HouseworkHome({ data, profile }: { data: HouseworkData; profile:
         : <p className="text-sm text-muted">⏳ Hôm nay: Chưa xác nhận</p>}
       {checkin && <details className="mt-3 text-sm text-muted">
         <summary>Sửa xác nhận nhầm</summary>
-        {profile.role === "admin" ? <Link className="text-button" href={`/khac/quan-tri/viec-nha?week=${data.week}`}>Mở công cụ quản trị</Link>
-          : <p className="mt-2">Hãy nhờ quản trị viên sửa giúp.</p>}
+        <Link className="text-button" href={`/khac/quan-tri/viec-nha?week=${data.week}`}>Sửa xác nhận việc nhà</Link>
       </details>}
     </>}
   </Card>;
 }
 
-export function HouseworkSchedule({ data, admin }: { data: HouseworkData; admin: boolean }) {
+export function HouseworkSchedule({ data }: { data: HouseworkData }) {
   return <Card>
     <CardHeading icon={BrushCleaning} title="Lượt việc nhà" />
     <WeekSelector week={data.week} path="/lich" />
@@ -54,7 +51,7 @@ export function HouseworkSchedule({ data, admin }: { data: HouseworkData; admin:
         </li>;
       })}
     </ul>}
-    {admin && <SetupHint admin />}
+    <SetupHint />
   </Card>;
 }
 

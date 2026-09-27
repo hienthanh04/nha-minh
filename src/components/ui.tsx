@@ -18,9 +18,9 @@ export function Completed({ at, label = "Đã làm" }: { at: string; label?: str
   return <p role="status" className="completed"><Check size={18} aria-hidden="true" />{label} lúc {timeLabel(at)}</p>;
 }
 
-export function PageHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
+export function PageHeading({ eyebrow, title, description }: { eyebrow?: string; title: string; description?: string }) {
   return <header className="mb-6">
-    <p className="eyebrow mb-2">{eyebrow}</p>
+    {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
     <h1 className="text-[1.8rem] font-bold leading-tight tracking-tight">{title}</h1>
     {description && <p className="mt-2 text-sm leading-relaxed text-muted">{description}</p>}
   </header>;

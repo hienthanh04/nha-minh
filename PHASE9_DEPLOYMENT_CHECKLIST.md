@@ -160,7 +160,7 @@ Dùng ít nhất hai tài khoản trên hai thiết bị hoặc hai hồ sơ tr�
 - [ ] Housework: đúng người trong tuần có nút hôm nay; người khác chỉ xem; lịch sử tuần đủ bảy ngày.
 - [ ] Food: nhà hiện tại/tiếp theo đúng; khi thực tế có nhận/hết, thực hiện chuyển trạng thái; hết có xác nhận, chỉ một lượt chờ mới.
 - [ ] `/lich`, `/lich-su`, `/khac`: điều hướng/tải lại đúng; ảnh/tên và lịch sử hiển thị; mở hướng dẫn cài.
-- [ ] Member mở trực tiếp `/khac/quan-tri` và trang admin con → bị chuyển về `/khac`; admin vào được.
+- [ ] Member mở trực tiếp `/khac/quan-tri` và trang admin con → bị chuyển về `/khac`; admin vào được. Ngoại lệ được duyệt 27/09/2026: `/khac/quan-tri/viec-nha` nay cho phép cả 5 thành viên phân công/sửa việc nhà; xem HOUSEWORK_PERMISSIONS_UPDATE.md.
 - [ ] Đăng xuất → `/login`; nút Back/tải lại URL bảo vệ không cấp lại quyền xem/sửa.
 - [ ] Supabase Auth user không có profile không được xem dữ liệu. Trường hợp này đã có local RLS tests; chỉ thử tài khoản phụ trên project test nếu cần, không mở signup để thử.
 - [ ] Không có lỗi console mới trong luồng trên; không có credential xuất hiện trong log.

@@ -12,5 +12,5 @@ export default async function SchedulePage({searchParams}: {searchParams: Promis
   const profile = await requireProfile();
   const week = selectedWeek((await searchParams).week);
   const [data, dinner, housework] = await Promise.all([getKitchenWeek(week), getDinner(week,addDays(week,6)), getHousework(week)]);
-  return <ScheduleScreen kitchen={<KitchenWeekView data={data} profile={profile}/>} dinner={<DinnerPlanner data={dinner} profile={profile} week={week}/>} housework={<HouseworkSchedule data={housework} admin={profile.role === "admin"}/>} />;
+  return <ScheduleScreen kitchen={<KitchenWeekView data={data} profile={profile}/>} dinner={<DinnerPlanner data={dinner} profile={profile} week={week}/>} housework={<HouseworkSchedule data={housework}/>} />;
 }

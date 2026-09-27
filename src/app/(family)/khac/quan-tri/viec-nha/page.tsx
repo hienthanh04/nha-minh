@@ -1,5 +1,5 @@
 import { DataError } from "@/components/data-status";
-import { requireAdmin } from "@/lib/auth/session";
+import { requireProfile } from "@/lib/auth/session";
 import { getHousework, getHouseworkRotation } from "@/lib/housework/queries";
 import { addDays, dateText, selectedWeek } from "@/lib/kitchen/rules";
 import { Card, PageHeading } from "@/components/ui";
@@ -7,13 +7,13 @@ import { WeekSelector } from "@/components/kitchen/week-view";
 import { AssignmentEditor, HouseworkCorrection, RotationEditor } from "@/components/housework/admin-editor";
 
 export default async function HouseworkAdminPage({ searchParams }: { searchParams: Promise<{ week?: string }> }) {
-  await requireAdmin();
+  await requireProfile();
   const week = selectedWeek((await searchParams).week);
   const [data, rotation] = await Promise.all([getHousework(week), getHouseworkRotation(week)]);
   const assignment = data.weeks.find(w => w.week_start === week);
   const member = data.members.find(m => m.id === assignment?.responsible_member_id);
   return <>
-    <PageHeading eyebrow="Quản trị gia đình" title="Phân công việc nhà" description="Một người mỗi tuần · Xác nhận từng ngày" />
+    <PageHeading title="Phân công việc nhà" description="Cả nhà cùng sửa phân công và xác nhận nhầm · Một người phụ trách mỗi tuần" />
     <WeekSelector week={week} path="/khac/quan-tri/viec-nha" />
     {data.error || rotation.error ? <Card><DataError message={data.error ?? rotation.error ?? "Không thể tải dữ liệu lúc này."} /></Card> : <div className="space-y-4">
       <Card>

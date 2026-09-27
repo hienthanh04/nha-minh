@@ -34,6 +34,10 @@ try {
   const verificationRows = verification.flatMap(result => result.rows);
   if (verificationRows.length !== 9 || verificationRows.some(row => row.passed !== true)) throw new Error("Housework read-only verification failed");
   console.log("PASS: 9 read-only housework migration checks");
+  const familyHousework = await db.exec(await readFile(new URL("../supabase/verify-family-housework.sql", import.meta.url), "utf8"));
+  const familyChecks = familyHousework.flatMap(result => result.rows);
+  if (familyChecks.length !== 5 || familyChecks.some(row => row.passed !== true)) throw new Error("Family housework permission verification failed");
+  console.log("PASS: 5 family housework permission checks");
   const foodVerification = await db.exec(await readFile(new URL("../supabase/verify-food.sql", import.meta.url), "utf8"));
   const foodVerificationRows = foodVerification.flatMap(result => result.rows);
   if (foodVerificationRows.length !== 10 || foodVerificationRows.some(row => row.passed !== true)) throw new Error("Food migration verification failed");

@@ -12,7 +12,7 @@ export default async function MorePage() {
   const db = await createClient();
   const { data: members, error } = await db.from("profiles").select("id, display_name, avatar_path").order("member_slot");
   return <>
-    <PageHeading eyebrow="Góc nhỏ của gia đình" title="Gia tộc Trần Anh" />
+    <PageHeading title="Gia tộc Trần Anh" />
     <div className="space-y-4">
       <Card>
         <div className="mb-3"><Avatar id={profile.id} name={profile.display_name} path={profile.avatar_path} large /></div>
@@ -21,7 +21,7 @@ export default async function MorePage() {
         <p className="mb-4 mt-2 text-muted">Thành viên số {profile.member_slot} · {profile.role === "admin" ? "Quản trị viên" : "Thành viên"}</p>
         {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri">Quản trị gia đình</Link>}
         {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri/bua-toi">Sửa bữa tối</Link>}
-        {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri/viec-nha">Phân công & sửa việc nhà</Link>}
+        <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri/viec-nha">Phân công & sửa việc nhà</Link>
         {profile.role === "admin" && <Link className="button button-secondary mb-3 w-full" href="/khac/quan-tri/do-an">Lượt gửi đồ ăn</Link>}
         <LogoutForm />
       </Card>

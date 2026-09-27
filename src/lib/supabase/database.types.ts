@@ -19,6 +19,7 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      housework_correct: { Args: { p_date: string; p_expected: string | null; p_at: string | null }; Returns: undefined };
       save_my_profile: { Args: { p_name: string; p_avatar: string | null; p_expected: string }; Returns: undefined };
       food_save_households: { Args: { p_items: Json }; Returns: undefined };
       food_initialize: { Args: { p_household: string }; Returns: undefined };

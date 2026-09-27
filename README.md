@@ -6,6 +6,8 @@ Earlier setup: [AUTH_SETUP.md](AUTH_SETUP.md), [KITCHEN_SETUP.md](KITCHEN_SETUP.
 
 ## Personal name and avatar update
 
+Latest permission update (2026-09-27): all five family members can use **Phân công & sửa việc nhà**. Apply only the new migration and follow [HOUSEWORK_PERMISSIONS_UPDATE.md](HOUSEWORK_PERMISSIONS_UPDATE.md) before deploying this update. Other admin tools retain their existing permissions.
+
 Follow [PROFILE_SETUP.md](PROFILE_SETUP.md) and apply `20260920000100_member_profiles.sql` once if not already applied. It creates the private avatar bucket and one-time introduction step. Members can later edit their own name/photo under **Khác → Hồ sơ của bạn**.
 
 ## Run locally

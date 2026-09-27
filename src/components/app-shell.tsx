@@ -21,7 +21,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Link href="/" className="flex min-h-11 items-center gap-2.5 font-bold tracking-tight" aria-label="Gia tộc Trần Anh — Hôm nay">
         <span className="brand-mark"><House size={18} strokeWidth={2.3} aria-hidden="true" /></span>Gia tộc Trần Anh<span className="text-orange"><Heart size={13} fill="currentColor" aria-hidden="true" /></span>
       </Link>
-      <span className="family-badge">Nhà mình mỗi ngày</span>
     </div>
     <DataRefresh />
     <main id="main-content" className="px-5 pb-8 pt-5 sm:px-7" tabIndex={-1}>{children}</main>

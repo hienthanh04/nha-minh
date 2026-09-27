@@ -106,6 +106,13 @@ test("Only assigned housework member gets today's button, completed record remov
   assert.doesNotMatch(render(el(HouseworkHome, { data, profile: { ...members[1], role: "member" } })), /Đã làm hôm nay<\/button>/);
   assert.doesNotMatch(render(el(HouseworkHome, { data: { ...data, checkins: [{ date: today, completed_at: "2026-09-21T11:35:00Z" }] }, profile })), /Đã làm hôm nay<\/button>/);
 });
+test("Ordinary members can open housework setup and correction without gaining daily responsibility", () => {
+  assert.match(render(el(HouseworkHome, { data: housework, profile })), /href="\/khac\/quan-tri\/viec-nha"/);
+  const data = { ...housework, weeks: [{ week_start: today, responsible_member_id: members[1].id }], checkins: [{ date: today, completed_at: "2026-09-21T11:35:00Z" }] };
+  const html = render(el(HouseworkHome, { data, profile }));
+  assert.match(html, /Sửa xác nhận việc nhà/);
+  assert.doesNotMatch(html, /Hãy nhờ quản trị viên|Đã làm hôm nay<\/button>/);
+});
 test("Food waiting and active actions differ, finishing has a confirmation dialog", () => {
   const batch = { id: "batch", household_id: "house", status: "waiting", start_date: null, updated_at: "2026-09-21T00:00:00Z" };
   const data = { ...food, households: [{ id: "house", name: "Nhà kiểm thử", rotation_position: 0, is_enabled: true }], current: batch };

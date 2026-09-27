@@ -49,10 +49,10 @@ A private family coordination PWA for exactly five known members. The primary ex
 ### Housework
 
 - One member is responsible for the entire Monday–Sunday week; responsibility rotates through all five and wraps after the fifth week.
-- Admin configures order, start week and future weekly exceptions. Normal rotation edits do not rewrite historical assignments/check-ins.
+- All five authenticated family members may configure order, start week and future weekly exceptions (approved 2026-09-27). Normal rotation edits do not rewrite historical assignments/check-ins.
 - Home identifies the responsible member, or says “Tuần này tới lượt bạn”.
 - Only that member sees “Đã làm hôm nay”. There is one possible check-in per date, including weekends.
-- Store responsible member, date and completion timestamp. Members check in only for today; admins may correct history.
+- Store responsible member, date and completion timestamp. Ordinary check-ins remain today-only for the responsible person. All five members may explicitly add/edit/remove mistaken confirmations, including history, through the protected correction operation; corrections retain the recorded responsible member and reject future dates/times and stale edits.
 - Everyone sees today's check-in status and the selected week's daily history, including unconfirmed days.
 
 ### Food rotation
@@ -89,7 +89,7 @@ Use friendly cards, readable Vietnamese, large tap targets, visible focus and iP
 - No public signup page; disable signup in Supabase as well.
 - Persistent authenticated sessions, protected application routes and RLS on every application table.
 - Anonymous users and authenticated accounts without a family profile cannot read family data.
-- Family members can read coordination data. They may change only their own dinner records, complete their responsible kitchen duties, delegate their originally assigned unconfirmed duties, check in during their housework week and advance food batches.
+- Family members can read coordination data. They may change only their own dinner records, complete their responsible kitchen duties, delegate their originally assigned unconfirmed duties, check in during their housework week and advance food batches. All five may also configure housework and explicitly correct its confirmations through checked operations, as approved on 2026-09-27.
 - Admins additionally edit schedules, profiles, households and accidental records. Members cannot modify role/assignment/completion-credit fields arbitrarily or impersonate another member.
 - Derive the actor from authentication. Enforce permissions in PostgreSQL, not only in the UI or Server Actions.
 - Retain at least one administrator; do not offer account signup or deletion in the app. Password recovery is administrator-assisted.
