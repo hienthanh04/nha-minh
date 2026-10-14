@@ -1,6 +1,6 @@
 # Gia tộc Trần Anh — Product specification
 
-Status: Phases 1–8 implemented. Phase 9 PWA/deployment preparation implemented locally; see PHASE9_DEPLOYMENT_CHECKLIST.md for validation and pending Vercel, real-account and iPhone checks. No Phase 9 migration. Business rules remain unchanged.
+Status: Phases 1–8 implemented. Phase 9 PWA/deployment preparation implemented locally; see PHASE9_DEPLOYMENT_CHECKLIST.md for validation and pending Vercel, real-account and iPhone checks. No Phase 9 migration. Approved follow-up changes are recorded below.
 
 ## Purpose and scope
 
@@ -37,14 +37,13 @@ A private family coordination PWA for exactly five known members. The primary ex
 ### Dinner
 
 - Keep dinner plans and eating check-ins as separate records.
-- Daily plan: unknown, eating (“Ăn”), or not eating (“Không ăn”). No plan record means unknown.
+- From 2026-10-14 (Vietnam date), no plan record means eating (“Có ăn”). Explicit not-eating choices always take precedence. Missing records before this date remain unknown to preserve history.
 - Members can plan the seven-day week ahead and change today's choice. Ordinary editing of past plans is disabled.
-- Unknown on Home: “Tối nay bạn có ăn không?” with “Ăn” and “Không ăn”.
-- Eating on Home: “Bạn đã báo: Có ăn” and “🍽 Tôi đã ăn”. A successful check-in shows its time.
-- Not eating: no eating check-in button. A secondary action changes today's choice.
+- Home starts with “Bữa tối: Có ăn”, a one-tap “Không ăn” button and “🍽 Tôi đã ăn”. A successful check-in shows its time. Default eating never implies the member has already eaten or explicitly reported a plan.
+- Not eating: hide the eating check-in button and show “Có ăn” to opt back in. Today/future planners offer these two choices; unknown remains historical only.
 - A check-in requires an eating plan. After check-in, changing to not eating requires correcting/removing the check-in first; do not silently erase it. Until simple undo is added, admins handle accidental check-ins.
 - Everyone sees all five statuses: “❓ Chưa báo”, “❌ Không ăn”, “🍚 Có ăn • Chưa ăn”, or “✅ Đã ăn”.
-- Only members with an eating plan and no check-in are shown as expecting food to be saved; unknown remains explicitly unknown.
+- Members with an explicit OR default eating plan and no check-in appear in the save-food list. When checking in under the default, create the eating plan and check-in in one transaction; respect RLS and never overwrite a saved not-eating choice. No scheduled job or mass insertion is needed.
 
 ### Housework
 
@@ -54,6 +53,7 @@ A private family coordination PWA for exactly five known members. The primary ex
 - Only that member sees “Đã làm hôm nay”. There is one possible check-in per date, including weekends.
 - Store responsible member, date and completion timestamp. Ordinary check-ins remain today-only for the responsible person. All five members may explicitly add/edit/remove mistaken confirmations, including history, through the protected correction operation; corrections retain the recorded responsible member and reject future dates/times and stale edits.
 - Everyone sees today's check-in status and the selected week's daily history, including unconfirmed days.
+- Every family member can open “Phân công & sửa việc nhà” directly from Home, Lịch or Khác, even while someone else is responsible. This does not require promoting their role to admin. Deploying frontend code does not apply the Supabase housework permission migration.
 
 ### Food rotation
 
@@ -124,4 +124,13 @@ See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for phase order, schema dec
 
 - App name and short name: Gia tộc Trần Anh (user-approved rename), language vi, standalone display, root start URL and scope.
 - Native App Router manifest and local PNG/Apple icons; no third-party PWA framework, service worker, offline mutation queue or private response cache.
-- Installation guidance lives in Khác. Production HTTPS deployment and real iPhone session/install smoke tests follow PHASE9_DEPLOYMENT_CHECKLIST.md and remain manual until verified.
+- Per the 2026-10-14 request, remove the entire installation-instructions card from Khác. PWA installation capability remains. Production HTTPS deployment and real iPhone session/install smoke tests follow PHASE9_DEPLOYMENT_CHECKLIST.md and remain manual until verified.
+
+## Quyền quản trị cho cả gia đình — 27/09/2026
+
+Yêu cầu mới: cả năm người có đầy đủ quyền admin, không chỉ sửa việc nhà.
+Cấu hình năm hồ sơ hiện có thành `role = admin` bằng `supabase/setup-family-admins.sql`.
+Xem [FAMILY_ADMIN_SETUP.md](FAMILY_ADMIN_SETUP.md). Giữ nguyên kiểm tra quyền,
+RLS, đăng nhập và quy tắc nghiệp vụ; tài khoản không có hồ sơ vẫn bị chặn.
+Các mô tả “admin” trong tài liệu áp dụng cho cả năm người sau bước cấu hình này.
+Home bỏ câu “Cùng chăm chút cho nhà mình.”.

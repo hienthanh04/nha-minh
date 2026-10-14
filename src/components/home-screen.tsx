@@ -12,7 +12,6 @@ export function HomeScreen({ profile, today, kitchen, dinner, housework, food }:
       <div>
         <p className="mb-1.5 text-sm capitalize text-muted">{dateLabel(today)}</p>
         <h1 className="text-[1.8rem] font-bold leading-tight tracking-tight">Chào {profile.display_name} <span className="text-[1.5rem]" aria-hidden="true">☀️</span></h1>
-        <p className="mt-2 text-sm text-muted">Cùng chăm chút cho nhà mình.</p>
       </div>
       <Avatar id={profile.id} name={profile.display_name} path={profile.avatar_path} large />
     </header>

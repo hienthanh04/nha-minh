@@ -28,8 +28,22 @@ insert into profiles(id,display_name,role,member_slot)
 set local request.jwt.claim.sub='f5000000-0000-0000-0000-000000000002';
 set local role authenticated;
 select pg_temp.check_dinner((select count(*)=5 from profiles),'Family sees five real profiles');
-select pg_temp.check_dinner((select count(*)=0 from dinner_plans),'No initial plan: unknown');
-select pg_temp.deny_dinner('insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner())','No check-in without plan');
+select pg_temp.check_dinner((select count(*)=0 from dinner_plans),'No rows are generated merely for reading default dinner plans');
+savepoint default_checkin;
+do $$ begin
+  if pg_temp.today_dinner() >= date '2026-10-14' then
+    insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner());
+    if not exists(select 1 from dinner_plans where member_id=auth.uid() and plan='eating') then
+      raise exception 'Default check-in did not materialize its eating plan';
+    end if;
+    insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner()) on conflict(member_id,date) do nothing;
+    if (select count(*) from dinner_checkins) <> 1 then raise exception 'Retry duplicated check-in'; end if;
+  else
+    perform pg_temp.deny_dinner('insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner())','Legacy missing plan rejects check-in');
+  end if;
+end $$;
+rollback to savepoint default_checkin;
+select pg_temp.check_dinner(true,'Default eating check-in and retry succeed without preselected plan');
 insert into dinner_plans(member_id,date,plan) values(auth.uid(),pg_temp.today_dinner(),'not_eating');
 select pg_temp.deny_dinner('insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner())','Not eating cannot check in');
 insert into dinner_plans(member_id,date,plan) values(auth.uid(),pg_temp.today_dinner(),'eating') on conflict(member_id,date) do update set plan=excluded.plan;
@@ -48,7 +62,7 @@ select pg_temp.deny_dinner($q$insert into dinner_plans(member_id,date,plan) valu
 insert into dinner_plans(member_id,date,plan) values(auth.uid(),pg_temp.today_dinner()+1,'eating');
 select pg_temp.check_dinner((select count(*)=2 from dinner_plans),'Member can plan tomorrow');
 delete from dinner_plans where date=pg_temp.today_dinner()+1 and member_id=auth.uid();
-select pg_temp.check_dinner((select count(*)=1 from dinner_plans),'Removing future plan restores unknown');
+select pg_temp.check_dinner((select count(*)=1 from dinner_plans),'Removing future plan restores the date-based default');
 reset role;
 set local request.jwt.claim.sub='f5000000-0000-0000-0000-000000000001';
 set local role authenticated;
@@ -77,11 +91,22 @@ set local role authenticated;
 select pg_temp.check_dinner((select count(*)=0 from dinner_plans),'Unknown Auth account cannot read family plans');
 select pg_temp.check_dinner((select count(*)=0 from dinner_checkins),'Unknown Auth account cannot read check-ins');
 select pg_temp.deny_dinner($q$insert into dinner_plans(member_id,date,plan) values(auth.uid(),pg_temp.today_dinner(),'eating')$q$,'Unknown Auth account cannot write');
+select pg_temp.deny_dinner($q$insert into dinner_checkins(member_id,date) values(auth.uid(),pg_temp.today_dinner())$q$,'Default dinner does not grant unknown accounts write access');
 reset role;
 set local request.jwt.claim.sub='';
 set local role anon;
 select pg_temp.check_dinner((select count(*)=0 from dinner_plans),'Anonymous cannot read family plans');
 select pg_temp.check_dinner((select count(*)=0 from dinner_checkins),'Anonymous cannot read check-ins');
+reset role;
+-- Fixed boundary tests do not depend on the test host's current date.
+set local request.jwt.claim.sub='f5000000-0000-0000-0000-000000000001';
+set local role authenticated;
+select pg_temp.deny_dinner($q$insert into dinner_checkins(member_id,date) values(auth.uid(),'2026-10-13')$q$,'Historical missing plan remains unknown');
+insert into dinner_checkins(member_id,date) values(auth.uid(),'2026-10-14');
+select pg_temp.check_dinner((select plan='eating' from dinner_plans where member_id=auth.uid() and date='2026-10-14'),'Default plan materializes for admin correction too');
+insert into dinner_checkins(member_id,date) values(auth.uid(),'2026-10-14') on conflict(member_id,date) do nothing;
+select pg_temp.check_dinner((select completed_at=now() from dinner_checkins where member_id=auth.uid() and date='2026-10-14'),'Idempotent default check-in preserves timestamp');
+select pg_temp.check_dinner(not exists(select 1 from dinner_plans where member_id='f5000000-0000-0000-0000-000000000006'),'Denied default check-in leaves no orphan plan');
 reset role;
 select * from dinner_results;
 rollback;

@@ -1,8 +1,8 @@
 # Gia tộc Trần Anh — Simplified implementation plan
 
-Status: Phases 1–8 implemented. Phase 9 PWA/deployment preparation implemented locally; see PHASE9_DEPLOYMENT_CHECKLIST.md for validation and pending Vercel, real-account and iPhone checks. No Phase 9 migration. Business rules remain unchanged.
+Status: Phases 1–8 implemented. Phase 9 PWA/deployment preparation implemented locally; see PHASE9_DEPLOYMENT_CHECKLIST.md for validation and pending Vercel, real-account and iPhone checks. No Phase 9 migration. Approved follow-up changes are recorded below.
 
-The product rules in [SPEC.md](SPEC.md) are unchanged. Optimize for five known people and a beginner-maintainable codebase.
+This plan follows the current product rules in [SPEC.md](SPEC.md), including approved follow-up changes. Optimize for five known people and a beginner-maintainable codebase.
 
 ## Working approach
 
@@ -58,7 +58,7 @@ Prefer route pages, reusable UI components, plain TypeScript business helpers an
 
 ## Phase 5 — Dinner
 
-- Connect the seven-day personal planner with unknown/eating/not-eating states.
+- Connect the seven-day personal planner with eating/not-eating choices. Approved 2026-10-14: missing plans default to eating from that business date onward; retain unknown for older history.
 - Connect separate eating check-ins and one-tap Home actions.
 - Show all five family statuses. Refresh saved data after actions and when returning to the app; live subscriptions are not needed yet.
 - Prevent incompatible plan changes after check-in. Supply admin correction for accidental records before optional member undo.
@@ -106,6 +106,7 @@ Local preparation implemented: App Router manifest, owned PNG icons, Apple metad
 
 - Add manifest, app icons (simple placeholders are sufficient), Apple touch icon and standalone display metadata.
 - Add iPhone “Chia sẻ → Thêm vào Màn hình chính” instructions. Keep authenticated data uncached and mutations online-only.
+- Follow-up 2026-10-14: remove the installation-instructions card from Khác at the user's request; retain manifest/icons and documentation. Full admin rights for all five require running the owner-only setup SQL in FAMILY_ADMIN_SETUP.md, not just deploying UI code.
 - Configure Vercel and production environment variables, Supabase redirect URLs and signup settings. Match local/deployment Node versions.
 - Complete setup/deployment README and final production build, lint/typecheck and relevant tests.
 - Likely areas: manifest/metadata/icons, deployment settings, README and final smoke tests.
@@ -122,7 +123,7 @@ Retain normalized business tables. UUIDs are used where a natural/composite key 
 | `kitchen_templates` | Effective-from Monday and template ID. Retain small dated versions so future edits have a defined start. |
 | `kitchen_template_slots` | Template, weekday, duty type/slot and assigned member. |
 | `kitchen_duties` | Date, type/slot, original assignee, delegate, completer, confirmation status/time. No separate week-marker FK; derive week from date. |
-| `dinner_plans` | Member/date composite key and plan. Missing means unknown. |
+| `dinner_plans` | Member/date composite key and plan. Missing means eating from 2026-10-14, unknown before that date. |
 | `dinner_checkins` | Member/date composite key referencing plan; completion timestamp. |
 | `housework_rotations` | Effective-from Monday and rotation ID. Retain dated order changes to avoid rewriting history. |
 | `housework_rotation_members` | Rotation, position 0–4, member; five unique members. |
@@ -180,3 +181,12 @@ Optional enhancements, not MVP gates: Realtime and simple safe undo.
 - Later edits live at Khác → Hồ sơ của bạn. Only the authenticated member can change their own name/avatar through the member operation; role, slot, account ID and work history remain unchanged.
 - Private Supabase Storage bucket, family-only reads, owner-only upload/delete of unused objects. Browser/server resize and re-encode JPEG; signed-in image endpoint uses private/no-store responses. No public URLs or service-role runtime key.
 - Additive migration: 20260920000100_member_profiles.sql. See PROFILE_SETUP.md for applying it once and real-device verification. This was an explicitly requested addition after Phase 8; Phase 9 preparation now follows PHASE9_DEPLOYMENT_CHECKLIST.md.
+
+## Quyền quản trị cho cả gia đình — 27/09/2026
+
+Yêu cầu mới: cả năm người có đầy đủ quyền admin, không chỉ sửa việc nhà.
+Cấu hình năm hồ sơ hiện có thành `role = admin` bằng `supabase/setup-family-admins.sql`.
+Xem [FAMILY_ADMIN_SETUP.md](FAMILY_ADMIN_SETUP.md). Giữ nguyên kiểm tra quyền,
+RLS, đăng nhập và quy tắc nghiệp vụ; tài khoản không có hồ sơ vẫn bị chặn.
+Các mô tả “admin” trong tài liệu áp dụng cho cả năm người sau bước cấu hình này.
+Home bỏ câu “Cùng chăm chút cho nhà mình.”.

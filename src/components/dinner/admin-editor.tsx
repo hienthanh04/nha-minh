@@ -3,7 +3,7 @@ import { vietnamDateTimeInput, correctedVietnamTimestamp } from "@/lib/date-form
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { adminSetDinnerPlan, adminCorrectDinner, type DinnerResult } from "@/lib/dinner/actions";
-import type { DinnerPlan } from "@/lib/dinner/rules";
+import { DINNER_DEFAULT_FROM, type DinnerPlan } from "@/lib/dinner/rules";
 import { timeText } from "@/lib/kitchen/rules";
 
 export function DinnerAdminEditor({member,date,today,plan,at}:{member:string;date:string;today:string;plan:DinnerPlan;at:string|null}) {
@@ -26,7 +26,7 @@ export function DinnerAdminEditor({member,date,today,plan,at}:{member:string;dat
   return <div className="space-y-4" aria-busy={pending}>
     <form className="space-y-3" action={form=>run(()=>adminSetDinnerPlan(member,date,String(form.get("plan")) as DinnerPlan))}>
       <label className="block text-sm">Kế hoạch bữa tối<select key={plan} name="plan" className="auth-input mt-1" defaultValue={plan} disabled={pending}>
-        <option value="unknown">Chưa báo</option><option value="eating">Có ăn</option><option value="not_eating">Không ăn</option>
+        {date < DINNER_DEFAULT_FROM && <option value="unknown">Chưa báo</option>}<option value="eating">Có ăn</option><option value="not_eating">Không ăn</option>
       </select></label>
       <button disabled={pending} className="button button-secondary w-full">Lưu sửa kế hoạch</button>
     </form>

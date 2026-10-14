@@ -100,10 +100,20 @@ test("Dinner displays all four states and names only waiting eaters in the save-
   const html = render(el(DinnerHome, { data, profile }));
   for (const text of ["Chưa báo", "Có ăn • Chưa ăn", "Không ăn", "Đã ăn", "Nhớ để phần cho: Thành viên kiểm thử 2."]) assert.ok(html.includes(text), text);
 });
+test("Default dinner offers one-tap opt-out and includes all five in the food count", () => {
+  const html=render(el(DinnerHome,{data:{...dinner,today:"2026-10-14",plans:[],checkins:[]},profile}));
+  assert.match(html,/Bữa tối: <strong>Có ăn/);
+  assert.match(html,/>Không ăn<\/button>/);
+  assert.match(html,/Tôi đã ăn<\/button>/);
+  assert.doesNotMatch(html,/Tối nay bạn có ăn không|Chưa báo/);
+  assert.match(html,/Nhớ để phần cho: Thành viên kiểm thử 1, Thành viên kiểm thử 2, Thành viên kiểm thử 3, Thành viên kiểm thử 4, Thành viên kiểm thử 5/);
+});
+
 test("Only assigned housework member gets today's button, completed record removes it", () => {
   const data = { ...housework, weeks: [{ week_start: today, responsible_member_id: profile.id }] };
   assert.match(render(el(HouseworkHome, { data, profile })), /Đã làm hôm nay<\/button>/);
   assert.doesNotMatch(render(el(HouseworkHome, { data, profile: { ...members[1], role: "member" } })), /Đã làm hôm nay<\/button>/);
+  assert.match(render(el(HouseworkHome, { data, profile: { ...members[1], role: "member" } })), /Phân công &amp; sửa việc nhà/);
   assert.doesNotMatch(render(el(HouseworkHome, { data: { ...data, checkins: [{ date: today, completed_at: "2026-09-21T11:35:00Z" }] }, profile })), /Đã làm hôm nay<\/button>/);
 });
 test("Ordinary members can open housework setup and correction without gaining daily responsibility", () => {

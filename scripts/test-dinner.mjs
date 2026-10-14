@@ -13,6 +13,14 @@ for (const [plan, at, label] of [
 test("Missing plan remains unknown, without inventing a check-in", () => {
   assert.deepEqual(dinnerFor("one", "2026-09-14", [], []), { plan: "unknown", at: null });
 });
+test("From October 14 missing plans default to eating, without inventing check-ins", () => {
+  assert.deepEqual(dinnerFor("one", "2026-10-14", [], []), {plan:"eating",at:null});
+  assert.deepEqual(dinnerFor("one", "2026-10-13", [], []), {plan:"unknown",at:null});
+  assert.deepEqual(dinnerFor("one", "2027-01-01", [], []), {plan:"eating",at:null});
+  const plans=[{member_id:"one",date:"2026-10-14",plan:"not_eating"}];
+  assert.deepEqual(dinnerFor("one", "2026-10-14", plans, []), {plan:"not_eating",at:null});
+  assert.deepEqual(dinnerFor("two", "2026-10-14", plans, []), {plan:"eating",at:null});
+});
 test("Plans and check-ins are scoped to both member and business date", () => {
   const plans = [{ member_id: "one", date: "2026-09-14", plan: "eating" }];
   const checks = [{ member_id: "two", date: "2026-09-14", completed_at: "2026-09-14T12:00:00Z" }];

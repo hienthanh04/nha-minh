@@ -1,5 +1,7 @@
 # Gia tộc Trần Anh — Phase 9 PWA & Deployment Preparation
 
+Cập nhật 14/10/2026: bữa tối mặc định Có ăn và nút phân công việc nhà trên Home cho mọi thành viên. Xem [OCTOBER_UPDATE.md](OCTOBER_UPDATE.md) để áp dụng SQL mới và kiểm tra quyền trên bản deploy.
+
 A Vietnamese, mobile-first Next.js App Router app for five family members. All core features use Supabase. Phase 9 adds an online-only PWA manifest, project-owned icons and iPhone installation guidance. **Start with [PHASE9_DEPLOYMENT_CHECKLIST.md](PHASE9_DEPLOYMENT_CHECKLIST.md)** for exact Vercel, Supabase and iPhone steps, environment variables and smoke tests. Local preparation is complete; deployment and real-account/iPhone acceptance remain manual. No Phase 9 migration or database reset is needed.
 
 Earlier setup: [AUTH_SETUP.md](AUTH_SETUP.md), [KITCHEN_SETUP.md](KITCHEN_SETUP.md), [DINNER_SETUP.md](DINNER_SETUP.md), [HOUSEWORK_SETUP.md](HOUSEWORK_SETUP.md), [FOOD_SETUP.md](FOOD_SETUP.md), [PHASE8_CHECKLIST.md](PHASE8_CHECKLIST.md). Only apply migrations not already applied; do not rerun them merely to deploy the frontend.
@@ -87,3 +89,12 @@ Local tests do not certify real account login, refresh tokens, logout or iPhone 
 ## Phase 4 release gate
 
 Apply only the new migration `20260913000200_kitchen_operations.sql` if Phase 2 migrations are already applied. Follow [KITCHEN_SETUP.md](KITCHEN_SETUP.md) for all changed files and exact instructions. Local checks: 14 kitchen rule tests, 42 foundation DB tests, 38 kitchen DB tests, 10 auth/HTTP checks, lint/typecheck and production build pass. Remote migration, multi-account kitchen flows and real iPhone checks remain pending.
+
+## Quyền quản trị cho cả gia đình — 27/09/2026
+
+Yêu cầu mới: cả năm người có đầy đủ quyền admin, không chỉ sửa việc nhà.
+Cấu hình năm hồ sơ hiện có thành `role = admin` bằng `supabase/setup-family-admins.sql`.
+Xem [FAMILY_ADMIN_SETUP.md](FAMILY_ADMIN_SETUP.md). Giữ nguyên kiểm tra quyền,
+RLS, đăng nhập và quy tắc nghiệp vụ; tài khoản không có hồ sơ vẫn bị chặn.
+Các mô tả “admin” trong tài liệu áp dụng cho cả năm người sau bước cấu hình này.
+Home bỏ câu “Cùng chăm chút cho nhà mình.”.

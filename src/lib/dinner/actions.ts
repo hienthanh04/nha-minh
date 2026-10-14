@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { getAccess } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { vietnamToday } from "@/lib/date-format";
-import { validDinnerDate, validPlan, mayChangePlan, type DinnerPlan } from "./rules";
+import { DINNER_DEFAULT_FROM, validDinnerDate, validPlan, mayChangePlan, type DinnerPlan } from "./rules";
 
 export type DinnerResult = { ok:boolean; message:string; login?:boolean };
 function refreshDinner() {
@@ -19,6 +19,7 @@ const denied:DinnerResult={ok:false,message:"Phiên đăng nhập không còn h�
 
 // Target member is supplied only by an explicitly checked admin operation.
 async function writePlan(member:string,date:string,plan:DinnerPlan):Promise<DinnerResult> {
+  if (plan === "unknown" && date >= DINNER_DEFAULT_FROM) return {ok:false,message:"Bữa tối mặc định Có ăn. Hãy chọn Có ăn hoặc Không ăn."};
   const db=await createClient();
   const {error}=plan === "unknown"
     ? await db.from("dinner_plans").delete().eq("member_id",member).eq("date",date)
@@ -40,7 +41,7 @@ export async function checkInDinner(displayedDate:string):Promise<DinnerResult> 
   try {
     const db=await createClient();
     // Timestamp defaults to database now(); no timestamp/member identity from the browser.
-    const {error}=await db.from("dinner_checkins").insert({member_id:access.profile.id,date:today});
+    const {error}=await db.from("dinner_checkins").upsert({member_id:access.profile.id,date:today},{onConflict:"member_id,date",ignoreDuplicates:true});
     refreshDinner();
     return error ? dinnerError(error.code) : {ok:true,message:"Đã lưu xác nhận ăn tối."};
   } catch { return dinnerError(); }

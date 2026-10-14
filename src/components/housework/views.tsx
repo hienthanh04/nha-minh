@@ -21,7 +21,6 @@ export function HouseworkHome({ data, profile }: { data: HouseworkData; profile:
     <CardHeading icon={BrushCleaning} title="Việc nhà tuần này" />
     {data.error ? <DataError message={data.error ?? "Không thể tải dữ liệu lúc này."} /> : !assignment ? <>
       <p>Tuần này chưa có phân công việc nhà.</p>
-      <SetupHint />
     </> : <>
       <p className="font-semibold">{member?.id === profile.id ? "Tuần này tới lượt bạn" : `Tuần này: ${member?.display_name ?? "Chưa đọc được tên"}`}</p>
       <p className="mb-4 mt-1 text-sm text-muted">{dateText(data.week)} – {dateText(addDays(data.week, 6))}</p>
@@ -33,6 +32,7 @@ export function HouseworkHome({ data, profile }: { data: HouseworkData; profile:
         <Link className="text-button" href={`/khac/quan-tri/viec-nha?week=${data.week}`}>Sửa xác nhận việc nhà</Link>
       </details>}
     </>}
+    <SetupHint />
   </Card>;
 }
 

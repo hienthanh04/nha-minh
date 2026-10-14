@@ -40,7 +40,7 @@ export function DinnerHome({data,profile}:{data:DinnerData;profile:FamilyProfile
           })}
         </ul>
         <p className="save-food-note">{waiting.length ? `Nhớ để phần cho: ${waiting.map(m=>m.display_name).join(", ")}.` : "Không còn người báo Có ăn đang chờ ăn."}</p>
-        <p className="mt-2 text-xs text-muted">Chưa báo vẫn là chưa rõ lựa chọn. Bấm Cập nhật dữ liệu để xem thay đổi từ thiết bị khác.</p>
+        <p className="mt-2 text-xs text-muted">Mặc định cả nhà có ăn. Ai vắng hãy chọn Không ăn. Có ăn chưa có nghĩa là đã ăn.</p>
       </>}
     </Card>
   </>;

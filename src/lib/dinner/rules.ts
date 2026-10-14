@@ -1,5 +1,7 @@
 import { validBusinessDate } from "../date-format.ts";
 export type DinnerPlan = "unknown" | "eating" | "not_eating";
+// Keep historical missing plans unknown; new days default to eating.
+export const DINNER_DEFAULT_FROM = "2026-10-14";
 export type DinnerMember = { avatar_path?: string | null; id: string; display_name: string; member_slot: number };
 export type DinnerPlanRow = { member_id: string; date: string; plan: "eating" | "not_eating" };
 export type DinnerCheckin = { member_id: string; date: string; completed_at: string };
@@ -10,7 +12,7 @@ export function dinnerStatus(plan: DinnerPlan, completedAt: string | null) {
   return { label:"Chưa báo", icon:"❓", tone:"muted" };
 }
 export function dinnerFor(member: string, date: string, plans: DinnerPlanRow[], checkins: DinnerCheckin[]) {
-  const plan: DinnerPlan = plans.find(p => p.member_id === member && p.date === date)?.plan ?? "unknown";
+  const plan: DinnerPlan = plans.find(p => p.member_id === member && p.date === date)?.plan ?? (date >= DINNER_DEFAULT_FROM ? "eating" : "unknown");
   const at = checkins.find(c => c.member_id === member && c.date === date)?.completed_at ?? null;
   return { plan, at };
 }
